@@ -122,7 +122,8 @@
         "drupal/views_year_filter": "^1.7",
         "drupal/vote_up_down": "^1.0@alpha",
         "drupal/votingapi": "^3.0@beta",
-        "drupal/webform": "^6.1"
+        "drupal/webform": "^6.1",
+        "psr/simple-cache": "^1.0"
     },
     "conflict": {
         "drupal/drupal": "*"
