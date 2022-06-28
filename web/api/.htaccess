@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+# Make sure Authorization HTTP header is available to PHP
+# even when running as CGI or FastCGI.
+RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1

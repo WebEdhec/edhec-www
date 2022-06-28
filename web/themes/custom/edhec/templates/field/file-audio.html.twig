@@ -1,0 +1,59 @@
+{#
+/**
+* @file
+* Default theme implementation to display the file entity as an audio tag.
+*
+* Available variables:
+* - attributes: An array of HTML attributes, intended to be added to the
+* audio tag.
+* - files: And array of files to be added as sources for the audio tag. Each
+* element is an array with the following elements:
+* - file: The full file object.
+* - source_attributes: An array of HTML attributes for to be added to the
+* source tag.
+*
+* @ingroup themeable
+*/
+#}
+{#{{ attach_library('classy/file') }}#}
+<div class="js-audio-player audio-player">
+    <audio class="js-audio" preload="metadata">
+        {% for file in files %}
+          <source src="{{ file_url(files.0.file.uri.0.value) }}" type="audio/mpeg" />
+        {% endfor %}
+    </audio>
+
+    <div class="top-controls">
+            <button class="js-play" role="button">play</button>
+            <button class="js-pause" role="button" style="display:none"> <i class="material-icons">pause</i> </button>
+    </div>
+    <div class="js-progress-slider-background progress-slider-background">
+        <div class="js-progress-slider progress-slider" /></div>
+    </div>
+    <div class="controls">
+        <div class="right-controls">
+            {% for file in files %}
+                <a class="js-download-link" download href={{file_url(file.file.uri.0.value)}}>
+                    <button class="js-download-button" type="button">Download</button>
+                </a>
+            {% endfor %}
+            <span class="js-playback-time playback-time"> 0:00 </span>
+            <span class="js-audio-duration playback-time"> 0:00 </span>
+            <span style="display:none" class="js-copy-msg copy-msg"> </span>
+            <button class="js-copy-time" style="display:none" >  </button>
+            <div class="volume-group" style="display:none">
+                <button class="js-volume"></button>
+                <div class="js-volume-slider-background volume-slider-background">
+                    <div class="js-volume-slider volume-slider"></div>
+                </div>
+            </div>
+        </div>
+        <div class="left-controls">
+            <button class="js-replay replay-button">  </button>
+            <button class="js-playback-speed">
+                <span class="speed-text"> &times;1</span>
+            </button>
+            <button class="js-forward">  </button>
+        </div>
+    </div>
+</div>

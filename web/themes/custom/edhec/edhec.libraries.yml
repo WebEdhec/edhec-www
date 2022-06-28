@@ -1,0 +1,47 @@
+global-styling:
+  css:
+    theme:
+      css/style.css: {}
+      css/menu.css: {}
+      css/header.css: {}
+      css/typo.css: {}
+      css/paragraph.css: {}
+      css/node.css: {}
+      css/views.css: {}
+      css/colors.css: {}
+      css/footer.css: {}
+      css/slick.css: {}
+      css/responsive.css: {}
+      css/animation.css: {}
+      css/custom.css: {}
+      css/researchers.css: {}
+
+  js:
+    js/slick.js: {}
+    js/edhec_theme.js: {}
+    js/tabs.js: {}
+    js/recherche.js: {}
+    js/side-menu.js: {}
+    js/menu.js: {}
+    js/dotdotdot.js: {}
+    js/masonry.pkgd.min.js: {}
+    js/carousel.js: {}
+    js/video-player.js: {}
+    js/audio-player.js: {}
+    js/alert.js: {}
+    js/highcharts.js: {}
+    js/charts.js: {}
+    js/exposedCustom.js: {}
+    js/researchers.js: {}
+    js/custom.js: {}
+
+
+    
+
+bootstrap-select:
+  version: 'v1.14.0-beta2'
+  css:
+    theme:
+      vendor/bootstrap-select/css/bootstrap-select.min.css: {}
+  js:
+    vendor/bootstrap-select/js/bootstrap-select.min.js: {}

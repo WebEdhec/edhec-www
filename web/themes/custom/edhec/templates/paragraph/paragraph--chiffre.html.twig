@@ -1,0 +1,12 @@
+{% block paragraph %}
+{% block content %}
+{# Loops through the tab sections again to print the tab section bodies. #}
+<div class="paragraph paragraph--type--chiffre paragraph--view-mode--default">
+       <div class="chiffre"><span class="count">{{ content.field_chiffre.0 }}</span><sup>{{ content.field_sup.0 }}</sup></div>
+       <div class="content-chiffre">
+       <div class="h4">{{ content.field_libelle.0 }}</div>
+       <p>{{content.field_complement.0['#text']|raw}}</p>
+       </div>
+</div>
+{% endblock %}
+{% endblock paragraph %}

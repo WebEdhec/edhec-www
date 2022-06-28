@@ -1,0 +1,13 @@
+{% block paragraph %}
+{% block content %}
+{# Loops through the tab sections again to print the tab section bodies. #}
+<div id="ancre-{{paragraph.id.value}}" class="paragraph paragraph-box coin-2 p-3 paragraph--type--liste-item paragraph--view-mode--default container">
+    <div class="row">
+        {{ content.field_picto }}
+        <p class="h5">{{ content.field_texte_b.0 }}</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% endblock paragraph %}

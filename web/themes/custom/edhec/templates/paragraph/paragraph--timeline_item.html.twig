@@ -1,0 +1,11 @@
+{% block paragraph %}
+{% block content %}
+{# Loops through the tab sections again to print the tab section bodies. #}
+<div class="paragraph paragraph--type--timeline_item paragraph--view-mode--default">
+        
+        <p class="h4">{{ content.field_item_titre.0 }}</p>
+        <p>{{ content.field_complement_item.0 }}</p>
+</div>
+
+{% endblock %}
+{% endblock paragraph %}

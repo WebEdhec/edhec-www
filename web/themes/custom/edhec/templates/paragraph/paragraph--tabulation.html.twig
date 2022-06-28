@@ -1,0 +1,189 @@
+{#
+/**
+ * @file
+ * A11Y Paragraphs Tab Wrapper paragraph template.
+ *
+ * Available variables:
+ * - paragraph: Full paragraph entity.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - paragraph.getCreatedTime() will return the paragraph creation timestamp.
+ *   - paragraph.id(): The paragraph ID.
+ *   - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
+ *   - paragraph.getOwnerId(): The user ID of the paragraph author.
+ *   See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
+ *   and methods for the paragraph object.
+ * - content: All paragraph items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ *   - content.field_a11y_para_tabs_sec_title: Formatted Text field used for the Section Title.
+ *   - content.field_a11y_para_tabs_tabs_panel: Paragraph Reference Field used to reference the Tabs Panel paragraph.
+ *   - content.field_a11y_para_tabs_tab_title: Formatted Text field used for the Tab panel Title.
+ *   - content.field_a11y_para_tabs_tab_content: Paragraph Reference Field used to reference the Tab Content paragraph.
+ *   - content.field_a11y_para_tabs_text_area: Text Formatted Long field used for adding text.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - paragraphs: The current template type (also known as a "theming hook").
+ *   - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
+ *     "Image" it would result in "paragraphs--type--image". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
+ *     preview would result in: "paragraphs--view-mode--preview", and
+ *     default: "paragraphs--view-mode--default".
+ * - view_mode: View mode; for example, "preview" or "full".
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator. 
+ *
+ */
+#}
+
+{# Sets Unique ID for Accordion from Paragraph ID. #}
+{% set section_id = 'section' ~ paragraph.id.value %}
+{% set tab_id = 'tab' ~ paragraph.id.value %}
+
+{% block paragraph %}
+{% block content %}
+
+          
+{# Loops through the tab sections again to print the tab section bodies. #} 
+<div id="ancre-{{paragraph.id.value}}" class="paragraph paragraph--type--tabulation p-50 ps-lg-0 pe-lg-0 plr-0  
+      {% if (paragraph.field_type_tab.value == 1) %} pe-lg-0 
+      {% endif %} 
+      pb-lg-0 tabulation-{{ paragraph.field_type_tab.value }} paragraph--view-mode--default fond 
+      {% if (paragraph.field_type_tab.value == 0) and (paragraph.field_fond.value == 2)  %} 
+      fond-0 fond-bg-r 
+      {% else %} 
+      fond-{{ paragraph.field_fond.value }} 
+      {% endif %}" role="tablist">
+           
+<div class="container">
+  {% if paragraph.field_entete.value is not empty %}
+  <div class="col-12 blc_entete">
+    {{ content.field_entete }}
+  </div>
+{% endif %}
+
+
+ {# Descktop #}
+    <div class="only-desctop-">
+    {% if paragraph.field_type_tab.value == 0 %}
+     {# if vertical tabs #}
+        {#% if is_mobile() %#} 
+            <div class="only-mobile">
+              <div class="accordion width-850" id="accordion{{ section_id }}">
+                {% for key, item in content.field_single_accordion if key|first != '#' %}
+                <div class="accordion-item">
+                    <div class="h2 accordion-header" id="heading-{{ section_id }}-{{ key + 1 }}">
+                        <button class="accordion-button  collapsed"  tabindex="0" 
+                                {#% if key != 0 %} collapsed {% endif %#}
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#collapse-{{ section_id }}-{{ key + 1 }}" {% if key == 0 %} 
+                                aria-expanded="false" {% else %} 
+                                aria-expanded="false" {% endif %} 
+                                aria-controls="collapse-{{ section_id }}-{{ key + 1 }}">
+                            {{ item['#paragraph'].field_title_accordion.value }}
+                        </button>
+                    </div>
+                    <div id="collapse-{{ section_id }}-{{ key + 1 }}" class="accordion-collapse collapse {#% if key == 0 %} show {% endif %#}" aria-labelledby="heading-{{ section_id }}-{{ key + 1 }}" data-bs-parent="#accordion{{ section_id }}">
+                        <div class="accordion-body pt-0">
+                            {{ item }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+              </div>
+           </div>
+        {#% else %#} 
+          <div class="only-desctop">
+            <div class="d-flex align-items-start- h-700">
+                <div class="nav flex-column nav-pills me-3x col-lg-4 col-12" id="v-pills-tab-{{ section_id }}" role="tablist" aria-orientation="vertical">
+                      {% for key, item in content.field_single_accordion if key|first != '#' %}  
+                          <h3>
+                              <button class="nav-link {% if key == 0 %} active {% endif %}" {% if key == 0 %} 
+                                      tabindex="0" 
+                                      aria-selected="true" {% else %} 
+                                      tabindex="-1" 
+                                      aria-selected="false" {% endif %} 
+                                      id="v-pills-{{ key + 1 }}-tab-{{ section_id }}" 
+                                      data-bs-toggle="pill" 
+                                      data-bs-target="#v-pills-{{ key + 1 }}-{{ section_id }}" 
+                                      type="button" 
+                                      role="tab" 
+                                      aria-controls="v-pills-{{ key + 1 }}-{{ section_id }}">{{ item['#paragraph'].field_title_accordion.value }}
+                              </button>
+                          </h3>
+                      {% endfor %}
+                </div>
+                <div class="tab-content fond-0 col-lg-8 col-12" id="v-pills-tabContent-{{ section_id }}">
+                      {% for key, item in content.field_single_accordion if key|first != '#' %}
+        
+                          <div class="tab-pane fade {% if key == 0 %} show active {% endif %}" 
+                              id="v-pills-{{ key + 1 }}-{{ section_id }}" 
+                              role="tabpanel" 
+                              aria-labelledby="v-pills-{{ key + 1 }}-tab-{{ section_id }}">
+                            {{ item }}
+                          </div>
+        
+                      {% endfor %}
+                </div>
+                     
+            </div>
+          </div>
+        {#% endif %#}
+      
+      {# end if vertical tabs #}  
+    
+    {% else %}
+      {# if horizontals tabs #}
+    
+      <nav>
+        <div class="nav nav-tabs justify-content-center" id="nav-tab-{{ section_id }}" role="tablist">
+         {% for key, item in content.field_single_accordion if key|first != '#' %}
+            <h3>
+                <button class="nav-link {% if key == 0 %} active {% endif %}" 
+                    id="nav-{{ key + 1 }}-tab-{{ section_id }}" 
+                    data-bs-toggle="pill" 
+                    data-bs-target="#nav-{{ key + 1 }}-{{ section_id }}" 
+                    type="button" role="tab" 
+                    aria-controls="nav-{{ key + 1 }}-{{ section_id }}" 
+                    aria-selected="true">
+                    {{ item['#paragraph'].field_title_accordion.value }}
+                </button>
+            </h3>
+         {% endfor %}
+        </div>
+      </nav>
+    
+      <div class="tab-content" id="nav-tabContent-{{ section_id }}">
+        {% for key, item in content.field_single_accordion if key|first != '#' %}
+          <div class="tab-pane fade show {% if key == 0 %} active {% endif %}" 
+               id="nav-{{ key + 1 }}-{{ section_id }}" 
+               role="tabpanel" 
+               aria-labelledby="nav-{{ key + 1 }}-tab-{{ section_id }}">
+              {{ item }}
+          </div>
+        {% endfor %}
+      </div>
+      {#<div class="d-flex align-items-start"></div>#}
+    
+      {# end if horizontals tabs #}
+    {% endif %}
+    
+    </div>
+
+
+    {% if paragraph.field_footer.value is not empty %}
+      <div class="col-12 blc_footer mb-4">
+        {{ content.field_footer }}
+      </div>
+    {% endif %}
+  </div>
+
+  </div>
+{% endblock %}
+{% endblock paragraph %}

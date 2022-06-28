@@ -1,0 +1,11 @@
+<svg id="Calendrier" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <path id="Tracé_176" data-name="Tracé 176" d="M18.667,3.667h-.833V2.833a.833.833,0,0,0-1.667,0v.833H12.833V2.833a.833.833,0,1,0-1.667,0v.833H7.833V2.833a.833.833,0,1,0-1.667,0v.833H5.333A3.333,3.333,0,0,0,2,7V18.667A3.333,3.333,0,0,0,5.333,22H18.667A3.333,3.333,0,0,0,22,18.667V7A3.333,3.333,0,0,0,18.667,3.667ZM5.333,5.333h.833v.833a.833.833,0,0,0,1.667,0V5.333h3.333v.833a.833.833,0,1,0,1.667,0V5.333h3.333v.833a.833.833,0,0,0,1.667,0V5.333h.833A1.667,1.667,0,0,1,20.333,7V8.667H3.667V7A1.667,1.667,0,0,1,5.333,5.333Zm13.333,15H5.333a1.667,1.667,0,0,1-1.667-1.667V10.333H20.333v8.333A1.667,1.667,0,0,1,18.667,20.333Z" transform="translate(-2 -2)" fill="#a52336"/>
+  <circle id="Ellipse_2" data-name="Ellipse 2" cx="0.833" cy="0.833" r="0.833" transform="translate(4.167 10.833)" fill="#a52336"/>
+  <circle id="Ellipse_3" data-name="Ellipse 3" cx="0.833" cy="0.833" r="0.833" transform="translate(4.167 14.167)" fill="#a52336"/>
+  <circle id="Ellipse_4" data-name="Ellipse 4" cx="0.833" cy="0.833" r="0.833" transform="translate(7.5 10.833)" fill="#a52336"/>
+  <circle id="Ellipse_5" data-name="Ellipse 5" cx="0.833" cy="0.833" r="0.833" transform="translate(7.5 14.167)" fill="#a52336"/>
+  <circle id="Ellipse_6" data-name="Ellipse 6" cx="0.833" cy="0.833" r="0.833" transform="translate(10.833 10.833)" fill="#a52336"/>
+  <circle id="Ellipse_7" data-name="Ellipse 7" cx="0.833" cy="0.833" r="0.833" transform="translate(10.833 14.167)" fill="#a52336"/>
+  <circle id="Ellipse_8" data-name="Ellipse 8" cx="0.833" cy="0.833" r="0.833" transform="translate(14.167 10.833)" fill="#a52336"/>
+  <circle id="Ellipse_9" data-name="Ellipse 9" cx="0.833" cy="0.833" r="0.833" transform="translate(14.167 14.167)" fill="#a52336"/>
+</svg>

@@ -1,0 +1,160 @@
+{#
+/**
+* @file
+* Theme override to display a node.
+*
+* Available variables:
+* - node: The node entity with limited access to object properties and methods.
+* Only method names starting with "get", "has", or "is" and a few common
+* methods such as "id", "label", and "bundle" are available. For example:
+* - node.getCreatedTime() will return the node creation timestamp.
+* - node.hasField('field_example') returns TRUE if the node bundle includes
+* field_example. (This does not indicate the presence of a value in this
+* field.)
+* - node.isPublished() will return whether the node is published or not.
+* Calling other methods, such as node.delete(), will result in an exception.
+* See \Drupal\node\Entity\Node for a full list of public properties and
+* methods for the node object.
+* - label: (optional) The title of the node.
+* - content: All node items. Use {{ content }} to print them all,
+* or print a subset such as {{ content.field_example }}. Use
+* {{ content|without('field_example') }} to temporarily suppress the printing
+* of a given child element.
+* - author_picture: The node author user entity, rendered using the "compact"
+* view mode.
+* - metadata: Metadata for this node.
+* - date: (optional) Themed creation date field.
+* - author_name: (optional) Themed author name field.
+* - url: Direct URL of the current node.
+* - display_submitted: Whether submission information should be displayed.
+* - attributes: HTML attributes for the containing element.
+* The attributes.class element may contain one or more of the following
+* classes:
+* - node: The current template type (also known as a "theming hook").
+* - node--type-[type]: The current node type. For example, if the node is an
+* "Article" it would result in "node--type-article". Note that the machine
+* name will often be in a short form of the human readable label.
+* - node--view-mode-[view_mode]: The View Mode of the node; for example, a
+* teaser would result in: "node--view-mode-teaser", and
+* full: "node--view-mode-full".
+* The following are controlled through the node publishing options.
+* - node--promoted: Appears on nodes promoted to the front page.
+* - node--sticky: Appears on nodes ordered above other non-sticky nodes in
+* teaser listings.
+* - node--unpublished: Appears on unpublished nodes visible only to site
+* admins.
+* - title_attributes: Same as attributes, except applied to the main title
+* tag that appears in the template.
+* - content_attributes: Same as attributes, except applied to the main
+* content tag that appears in the template.
+* - author_attributes: Same as attributes, except applied to the author of
+* the node tag that appears in the template.
+* - title_prefix: Additional output populated by modules, intended to be
+* displayed in front of the main title tag that appears in the template.
+* - title_suffix: Additional output populated by modules, intended to be
+* displayed after the main title tag that appears in the template.
+* - view_mode: View mode; for example, "teaser" or "full".
+* - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+* - page: Flag for the full page state. Will be true if view_mode is 'full'.
+* - readmore: Flag for more state. Will be true if the teaser content of the
+* node cannot hold the main body content.
+* - logged_in: Flag for authenticated user status. Will be true when the
+* current user is a logged-in member.
+* - is_admin: Flag for admin user status. Will be true when the current user
+* is an administrator.
+*
+* @see template_preprocess_node()
+*
+*/
+#}
+{%
+set classes = [
+'fond-1 p-0 pe-0 ps-0 node',
+'node--type-' ~ node.bundle|clean_class,
+node.isPromoted() ? 'node--promoted',
+node.isSticky() ? 'node--sticky',
+not node.isPublished() ? 'node--unpublished',
+view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
+{{ attach_library('classy/node') }}
+<article {{ attributes.addClass(classes) }}>
+    <div {{ content_attributes.addClass('node__content') }}>
+        <div class="container mobile">
+            <div class="only-mobile">
+                <button class="h4 accordion-button-programme accordion-button collapsed d-lg-none" role="button">
+                    <div class="clearfix text-formatted field field--name-field-programme-display-titre field--type-text-long field--label-hidden field__item">
+                         <h3>{{node.field_programme_display_titre.value|raw}}</h3>
+                    </div>
+                </button>
+            </div>
+            <div class="accordion-body-programme">
+                <div class="row m-0">
+                    <div class="col-lg-5 col-12 programme-left p-3 pt-0 ps-0 mb-3">
+                       <div class="onlydesctop">
+                            <div class="h2">{{node.field_programme_display_titre.value|raw}}</div>
+                        </div>
+                        {{ content.field_programme_chapo }}
+                        <div class="brochure-bottom">
+                            {#{ content.field_brochure }#}
+                            <div class="node node--type-brochure node--promoted node--view-mode-teaser">
+                              <div class="node__content">
+                                <div class="container p-0">
+                                  <div class="row m-0">
+                                        <div class="col-md-12 p-0">
+
+                                         {% if content.field_brochure_lien.0 is not empty %}
+                                                <a href="{{ content.field_brochure_lien.0['#title'] }}" title="{{node.field_programme_display_titre.value|raw}}"  target="_blank" class="bn rouge down">{{'Download the brochure'|trans}}</a>
+                                        {% else %}
+                                               <a href="{{"/brochures"|trans}}"  title="{{node.field_programme_display_titre.value|raw}}" class="bn rouge down">{{'Download the brochure'|trans}}</a>
+                                         {% endif%}
+                                        </div>
+                                        <div class="col-md-12 p-0">
+                                            <a href="{{ url }}" title="{{node.field_programme_display_titre.value|raw}}" class="bn rouge arrow_next">{{'Découvrir le parcours'|trans}}</a>
+                                        </div>
+                                   </div> 
+                                </div>
+                              </div> 
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-12 programme-right p-0">
+                        <div class="programme-top-droite container p-4 fond-0">
+                            <div class="row m-0 g-4 pb-0 row-cols-2 row-cols-md-3 paragraph paragraph--type--caracteristique paragraph--view-mode--default">
+                                {% for key, item in content.field_caracteristique if key|first != '#' %}
+                                {{ content.field_caracteristique[key] }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="programme-bottom-droite paragraph--type--encadre p-4 coin-3 fond-2 mis_en_avant_Off">
+                            {{ content.field_accroche.0 }}
+                        </div>
+                    </div>
+                    <div class="brochure-bottom-tabs hidden mt-3 p-0">
+                        {#{{ content.field_brochure }}#}
+                        <div class="node node--type-brochure node--promoted node--view-mode-teaser">
+                          <div class="node__content">
+                            <div class="container p-0">
+                              <div class="row m-0">
+                                    <div class="col-md-12 p-0">
+                                        {% if content.field_brochure_lien.0 is not empty %}
+                                                <a href="{{ content.field_brochure_lien.0['#title'] }}" aria-label="{{'Download the brochure'|trans}} {{ label.0 }}"  target="_blank" title="{{ label.0 }}" class="bn rouge down">{{'Download the brochure'|trans}}</a>
+                                        {% else %}
+                                                <a href="{{"/brochures"|trans}}" aria-label="{{'Download the brochure'|trans}} {{ label.0 }}"  target="_blank" title="{{ label.0 }}" class="bn rouge down">{{'Download the brochure'|trans}}</a>
+                                         {% endif%}
+
+                                    </div>
+                                    <div class="col-md-12 p-0">
+                                        <a href="{{ url }}" aria-label="{{'Découvrir le parcours'|trans}}  {{ label.0 }} " title="{{ label.0 }}" target="_blank" class="bn rouge arrow_next">{{'Découvrir le parcours'|trans}}</a>
+                                    </div>
+                               </div> 
+                            </div>
+                          </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

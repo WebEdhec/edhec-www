@@ -1,0 +1,32 @@
+name: Edhec
+type: theme
+description: 'Edhec subtheme based on Bootstrap 5 theme.'
+core_version_requirement: '^8.9 || ^9'
+'base theme': bootstrap5
+libraries:
+  - edhec/global-styling
+  - edhec/bootstrap-select
+stylesheets-remove:
+  - '@bootstrap5/css/style.css'
+regions:
+  alert: Alert
+  header: Header
+  nav_branding: 'Navigation branding region'
+  nav_main: 'Main navigation region'
+  nav_additional: 'Additional navigation region (eg search form, social icons, etc)'
+  nav_branding_vox: 'Navigation branding region EdhecVox'
+  nav_main_vox: 'Main navigation region EdhecVox'
+  breadcrumb: Breadcrumbs
+  content: 'Main content'
+  content_bottom: 'Main content Bottom'
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  footer_newsletter: 'Newsletter Footer'
+  footer: Footer
+  footer_bottom: 'Bottom Footer'
+  remontee_auto: 'Remontée auto'
+
+libraries-override:
+  core/drupal.collapse: 
+    js:
+      misc/details-aria.js: false

@@ -1,0 +1,103 @@
+{#
+/**
+* @file
+* A11Y Paragraphs Tab Wrapper paragraph template.
+*
+* Available variables:
+* - paragraph: Full paragraph entity.
+* Only method names starting with "get", "has", or "is" and a few common
+* methods such as "id", "label", and "bundle" are available. For example:
+* - paragraph.getCreatedTime() will return the paragraph creation timestamp.
+* - paragraph.id(): The paragraph ID.
+* - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
+* - paragraph.getOwnerId(): The user ID of the paragraph author.
+* See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
+* and methods for the paragraph object.
+* - content: All paragraph items. Use {{ content }} to print them all,
+* or print a subset such as {{ content.field_example }}. Use
+* {{ content|without('field_example') }} to temporarily suppress the printing
+* of a given child element.
+* - content.field_a11y_para_tabs_sec_title: Formatted Text field used for the Section Title.
+* - content.field_a11y_para_tabs_tabs_panel: Paragraph Reference Field used to reference the Tabs Panel paragraph.
+* - content.field_a11y_para_tabs_tab_title: Formatted Text field used for the Tab panel Title.
+* - content.field_a11y_para_tabs_tab_content: Paragraph Reference Field used to reference the Tab Content paragraph.
+* - content.field_a11y_para_tabs_text_area: Text Formatted Long field used for adding text.
+* - attributes: HTML attributes for the containing element.
+* The attributes.class element may contain one or more of the following
+* classes:
+* - paragraphs: The current template type (also known as a "theming hook").
+* - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
+* "Image" it would result in "paragraphs--type--image". Note that the machine
+* name will often be in a short form of the human readable label.
+* - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
+* preview would result in: "paragraphs--view-mode--preview", and
+* default: "paragraphs--view-mode--default".
+* - view_mode: View mode; for example, "preview" or "full".
+* - logged_in: Flag for authenticated user status. Will be true when the
+* current user is a logged-in member.
+* - is_admin: Flag for admin user status. Will be true when the current user
+* is an administrator.
+*
+*/
+#}
+{% set section_id = 'section' ~ paragraph.id.value %}
+{% block paragraph %}
+{% block content %}
+
+{# Loops through the tab sections again to print the tab section bodies. #}
+<div class="container paragraph paragraph--type--graphique p-50 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}" data-graphic  data-graphic-type="{{ paragraph.field_type_graphique.value }}">
+    <div class="paragraph position-relative row">
+        {{ content.field_entete }}
+        <div class="graphique_container graphique row {% if  paragraph.field_type_graphique.value == '2'%} m-0 p-0 horizontal-graphique{% endif %}">
+            <div class="graphique-type" style="display:none" data-container="{{section_id}}">
+                {{ paragraph.field_type_graphique.value }}
+            </div>          
+            {% if paragraph.field_type_graphique.value == '0' %}
+                <div id="container-{{section_id}}" style="width:100%; height:400px;"></div>
+            {% elseif paragraph.field_type_graphique.value == '1' %}
+                <div id="container-{{section_id}}" class="container-vertical" style="width:100%; height:400px;"></div>
+            {% endif %}
+            {% for key, item in content.field_donnee if key|first != '#' %}
+                {% if paragraph.field_type_graphique.value == '0' %}
+                    <div class="field graphique js-field-content-{{section_id}}" style="display:none">
+                        { "name": "{{ item['#paragraph'].field_libelle.value }}", "y": {{ item['#paragraph'].field_complement_item.value|number_format(2, '.', '') }} }
+                    </div>
+                {% elseif  paragraph.field_type_graphique.value == '1'%}
+                    <div class="field graphique js-field-content-{{section_id}}" style="display:none">
+                        ["{{ item['#paragraph'].field_libelle.value }}", {{ item['#paragraph'].field_complement_item.value|number_format(2, '.', '') }} ]
+                    </div>
+                 {% elseif  paragraph.field_type_graphique.value == '2'%}
+                    <div class="progress-simple pregress-horizontal">
+                    <label for="file">{{ item['#paragraph'].field_libelle.value }}</label>
+                    <div class="progress progress-no-border-radius">
+                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{ item['#paragraph'].field_complement_item.value|number_format(1) }}" aria-valuemin="0" aria-valuemax="100" >
+                            <span class="sr-only">{{ item['#paragraph'].field_complement_item.value|number_format(1) }}%</span>
+                        </div>
+                    </div>
+
+                   {# 
+                    <label for="file">{{ item['#paragraph'].field_libelle.value }}</label>
+                   <progress id="file" max="100" value="{{ item['#paragraph'].field_complement_item.value|number_format(1) }}"> {{ item['#paragraph'].field_complement_item.value|number_format(1) }}% 
+                    </progress>
+                   <span style="width: {{ item['#paragraph'].field_complement_item.value|number_format(1) }}%">{{ item['#paragraph'].field_complement_item.value|number_format(1) }}%</span>#}
+                    </div>
+                 {% elseif  paragraph.field_type_graphique.value == '3'%}
+                    <div class="progress-simple">
+                    <label class="h3 text-center mb-4 col-12" for="file">{{ item['#paragraph'].field_libelle.value }}</label>
+                     
+                    <div class="progress progress-no-border-radius">
+                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{ item['#paragraph'].field_complement_item.value|number_format(1) }}" aria-valuemin="0" aria-valuemax="100" >
+                            <span class="sr-only">{{ item['#paragraph'].field_complement_item.value|number_format(1) }}%</span>
+                        </div>
+                    </div>
+                    
+                   </div> 
+                {% endif %}
+                
+            {% endfor %}
+        </div>
+        {{ content.field_footer }}
+    </div>
+</div>
+{% endblock %}
+{% endblock paragraph %} 

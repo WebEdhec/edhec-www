@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Default theme implementation of a views exposed form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ *
+ * @see template_preprocess_views_exposed_form()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if q is not empty %}
+  {#
+    This ensures that, if clean URLs are off, the 'q' is added first,
+    as a hidden form element, so that it shows up first in the POST URL.
+  #}
+{{ q }}
+{% endif %}
+{{ form }}
+{{dump(form['field_continent'])}}
+ {% if exposed['cible_collapsible']['#open'] or exposed['thematique_collapsible']['#open'] or exposed['type_collapsible']['#open'] %}
+  Resultat active !!
+                {% if rows.0['#view'].total_rows == 1 %}
+                    <div class="search-results-number ps-4 w-990 mt-4">
+                        {{ rows.0['#view'].total_rows }}{{' résultat'|trans}}
+                    </div>
+                {% elseif rows.0['#view'].total_rows is not null %}
+                    <div class="search-results-number ps-4 w-990 mt-4">
+                        {{ rows.0['#view'].total_rows }}{{' résultats'|trans}}
+                    </div>
+                {% endif %}
+        {% endif %}

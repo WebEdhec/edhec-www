@@ -1,0 +1,62 @@
+custom_import.homepage:
+  title: 'Import: Accueil'
+  description: 'Accueil'
+  parent: system.admin_config_development
+  route_name: custom_import.homepage
+  weight: 1
+
+custom_import.communique_de_presse:
+  title: 'Import: Communique de Presse'
+  description: 'Communique de Presse'
+  parent: custom_import.homepage
+  route_name: custom_import.communique_de_presse
+  weight: 2
+
+custom_import.association:
+  title: 'Import: Association'
+  description: 'Association'
+  parent: custom_import.homepage:
+  route_name: custom_import.association
+  weight: 3
+
+custom_import.start_up:
+  title: 'Import: Start Up'
+  description: 'Start Up'
+  parent: custom_import.homepage
+  route_name: custom_import.start_up
+  weight: 4
+
+custom_import.actualites:
+  title: 'Import: Actualites'
+  description: 'Actualites'
+  parent: custom_import.homepage
+  route_name: custom_import.actualites
+  weight: 5
+
+custom_import.evenements:
+  title: 'Import: Evenements'
+  description: 'Evenements'
+  parent: custom_import.homepage
+  route_name: custom_import.evenements
+  weight: 6
+
+custom_import.vox:
+  title: 'Import: Vox'
+  description: 'Vox'
+  parent: custom_import.homepage
+  route_name: custom_import.vox
+  weight: 7
+
+custom_import.theses_phd:
+  title: 'Import: Theses PHD'
+  description: 'Theses PHD'
+  parent: custom_import.homepage
+  route_name: custom_import.theses_phd
+  weight: 8
+
+custom_import.terms_form:
+  title: 'Import: Terms'
+  description: 'Terms'
+  parent: custom_import.homepage
+  route_name: custom_import.terms_form
+  weight: 50

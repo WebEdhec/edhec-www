@@ -1,0 +1,71 @@
+custom_import.homepage:
+  path: '/admin/import'
+  defaults:
+    _title: 'Import: Accueil'
+    _controller: '\Drupal\custom_import\Controller\ImportController::content'
+  requirements:
+    _role: 'administrator'
+
+custom_import.communique_de_presse:
+  path: '/admin/import/communique-de-presse'
+  defaults:
+    _title: 'Import: Communiqué de Presse'
+    _form: '\Drupal\custom_import\Form\CommuniquePresseForm'
+  requirements:
+    _role: 'administrator'
+  
+custom_import.association:
+  path: '/admin/import/association'
+  defaults:
+    _title: 'Import: Association'
+    _form: '\Drupal\custom_import\Form\AssociationForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.start_up:
+  path: '/admin/import/start-up'
+  defaults:
+    _title: 'Import: Start Up'
+    _form: '\Drupal\custom_import\Form\StartUpForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.actualites:
+  path: '/admin/import/actualites'
+  defaults:
+    _title: 'Import: Actualites'
+    _form: '\Drupal\custom_import\Form\ActuForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.evenements:
+  path: '/admin/import/evenements'
+  defaults:
+    _title: 'Import: Evenements'
+    _form: '\Drupal\custom_import\Form\EventForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.vox:
+  path: '/admin/import/vox'
+  defaults:
+    _title: 'Import: Vox'
+    _form: '\Drupal\custom_import\Form\VoxForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.theses_phd:
+  path: '/admin/import/theses'
+  defaults:
+    _title: 'Import: Theses PHD'
+    _form: '\Drupal\custom_import\Form\TheseForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.terms_form:
+  path: '/admin/import/terms'
+  defaults:
+    _title: 'Import: Terms'
+    _form: '\Drupal\custom_import\Form\TermsForm'
+  requirements:
+    _role: 'administrator'

@@ -1,0 +1,25 @@
+{%
+  set classes = [
+    'block row w-990 special-prof',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+
+<div{{attributes.addClass(classes)}}>
+
+    {% block content %}
+        <div class="col-auto img-box">
+            <a href="{{ content.field_url[0]['#url'] }}">
+            {{ content.field_image }}
+            </a>
+        </div>
+        <div class="col-auto align-self-center">
+            <a href="{{ content.field_url[0]['#url'] }}">
+            <span class="name-field mb-0 h4">{{ content.field_title.0 }}</span><br>
+            <span class="mb-0">{{ content.field_sub_title.0 }}</span>
+            </a>
+        </div>
+    {% endblock %}
+
+</div>

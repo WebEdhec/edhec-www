@@ -1,0 +1,122 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a paragraph.
+ *
+ * Available variables:
+ * - paragraph: Full paragraph entity.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - paragraph.getCreatedTime() will return the paragraph creation timestamp.
+ *   - paragraph.id(): The paragraph ID.
+ *   - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
+ *   - paragraph.getOwnerId(): The user ID of the paragraph author.
+ *   See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
+ *   and methods for the paragraph object.
+ * - content: All paragraph items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - paragraphs: The current template type (also known as a "theming hook").
+ *   - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
+ *     "Image" it would result in "paragraphs--type--image". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
+ *     preview would result in: "paragraphs--view-mode--preview", and
+ *     default: "paragraphs--view-mode--default".
+ * - view_mode: View mode; for example, "preview" or "full".
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_paragraph()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished'
+  ]
+%}
+{% set section_id = 'section' ~ paragraph.id.value %}
+{% block paragraph %}
+   <div class="paragraph paragraph--type--compte_a_rebours reveal p-50 paragraph--view-mode--default">
+   <div class="paragraph_bg container pe-0 ps-0 pb-2">
+    <div class="paragraph container text-center paragraph--type--encadre p-50 coin-3 paragraph--view-mode--default fond fond-2">
+    {% block content %}
+
+
+
+{#{{ 'now'|date('Y-m-d')|date('U') }}#}
+{#{{ 'now'|date('U') }}#}
+{#{{ content.field_echeance.0['#markup']|date('U') }}#}
+{#{{ content.field_echeance.0['#markup'] }}#}
+      <div id="lang-code" class="visually-hidden">{{language}}</div>
+      {% if (content.field_echeance.0['#markup']|date('U')) >= ('now'|date('Y-m-d')|date('U')) %}
+        <p id="more-{{section_id}}" class="m-0 plus-que">{{'Plus que'|trans}}</p>
+        <div class="nbrj">
+          <span id="clock-{{section_id}}"></span> <span id="label-{{section_id}}">{{ 'jours'|trans }}</span>
+        </div>
+        {{ content.field_message }}
+
+        <script>
+            // Set the date we're counting down to
+            var countDownDate{{section_id}} = new Date("{{ content.field_echeance|field_value }}").getTime();
+            // Update the count down every 1 second
+            var x = setInterval(function() {
+
+              // Get today's date and time
+              var now = new Date().getTime();
+
+              // Find the distance between now and the count down date
+              var distance{{section_id}} = countDownDate{{section_id}} - now;
+
+              // Time calculations for days, hours, minutes and seconds
+              var days = (Math.floor(distance{{section_id}} / (1000 * 60 * 60 * 24))) + 1;
+
+              document.getElementById("clock-{{section_id}}").innerHTML = days;
+              var language = document.getElementById("lang-code").innerHTML;
+                if(language=='fr'){
+                  if(document.getElementById("clock-{{section_id}}").innerHTML=='1') {
+                  document.getElementById("label-{{section_id}}").innerHTML = "jour";
+                }
+                // If the count down is finished, write some text
+                if (distance{{section_id}} < 1) {
+                  clearInterval(x);
+                  document.getElementById("clock-{{section_id}}").innerHTML = "Dernier";
+                  document.getElementById("label-{{section_id}}").innerHTML = "jour";
+                  document.getElementById("more-{{section_id}}").innerHTML = "";
+                }
+                }
+                if(language=='en'){
+                  if(document.getElementById("clock-{{section_id}}").innerHTML=='1') {
+                  document.getElementById("label-{{section_id}}").innerHTML = "day";
+                }
+                // If the count down is finished, write some text
+                if (distance{{section_id}} < 1) {
+                  clearInterval(x);
+                  document.getElementById("clock-{{section_id}}").innerHTML = "Last";
+                  document.getElementById("label-{{section_id}}").innerHTML = "day";
+                  document.getElementById("more-{{section_id}}").innerHTML = "";
+                }
+                }
+              
+            }, 1000);
+          </script>
+      {% else %}
+        {{ content.field_texte }}
+      {% endif %}
+
+    {% endblock %}
+    </div>
+   </div>
+  </div>
+{% endblock paragraph %}

@@ -1,0 +1,115 @@
+<?php
+
+// use \Drupal\views\ViewExecutable;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\media\Entity\Media;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Attach library
+ */
+function algosearch_views_pre_render(ViewExecutable $view)
+{
+    if (isset($view)) {
+        if ($view->storage->id() == 'search_all') {
+            $view->element['#attached']['library'][] = 'algosearch/algosearch_libs';
+        } else {
+            $view->element['#attached']['library'][] = 'algosearch/algosearch_libs_less';
+        }
+    }
+}
+
+/**
+ * @OVERRIDE
+ *
+ * Alter Algolia objects before they are sent to Algolia for indexing.
+ *
+ * @param array $objects
+ *   An array of objects ready to be indexed, generated from $items array.
+ * @param \Drupal\search_api\IndexInterface $index
+ *   The search index for which items are being indexed.
+ * @param \Drupal\search_api\Item\ItemInterface[] $items
+ *   An array of items to be indexed, keyed by their item IDs.
+ */
+function algosearch_search_api_algolia_objects_alter(array &$objects, \Drupal\search_api\IndexInterface $index, array $items)
+{
+    foreach ($objects as $key => $object) {
+        /* -------------- Image header -------------- */
+        if (isset($objects[$key]['field_header'])) {
+            $mediaId = $objects[$key]['field_header'];
+            $media = Media::load((int) $mediaId);
+            $relativeUrl = "";
+
+            if ($media) {
+                $imageStyle = ImageStyle::load('actualite_220_220');
+
+                if ($imageStyle) {
+                    $uri = $imageStyle->buildUrl($media->field_media_image->entity->getFileUri());
+                    $relativeUrl = file_url_transform_relative($uri);
+                }
+            }
+
+            $objects[$key]['field_header'] = $relativeUrl;
+        }
+        /* -------------- End Image header -------------- */
+
+        /* -------------- Content Type -------------- */
+        if (isset($objects[$key]['type'])) {
+            $result = \Drupal::entityTypeManager()
+                ->getStorage('node_type')
+                ->loadByProperties([
+                    'type' => $objects[$key]['type'],
+                ]);
+
+            $type = reset($result);
+
+            if ($type) {
+                $objects[$key]['type'] = $type->get('name');
+            } else {
+                $objects[$key]['type'] = "";
+            }
+        }
+        /* -------------- End Content Type -------------- */
+    }
+}
+
+/**
+ * Alter export data
+ */
+function algosearch_views_post_execute(ViewExecutable $view)
+{
+    if ($view->current_display == "rest_export_algolia") {
+        foreach ($view->result as $key => $result) {
+            // Get language code
+            $langCode = $result->node_field_data_langcode;
+
+            // Get translation entity
+            $translation = $result->_entity->getTranslation($langCode);
+
+            // Get field header value
+            $field_header = isset($translation->field_header) ? $translation->field_header->getValue() : null;
+            $mediaId = $field_header && isset($field_header[0]) ? $field_header[0]["target_id"] : null;
+
+            if ($mediaId) {
+                $media = Media::load((int) $mediaId);
+
+                if ($media) {
+                    $imageStyle = ImageStyle::load('actualite_220_220');
+
+                    // $fid = $media->getSource()->getSourceFieldValue($media);
+                    // $file = File::load($fid);
+                    // $relativeUrl = $file->createFileUrl(true);
+
+                    if ($imageStyle) {
+                        $uri = $imageStyle->buildUrl($media->field_media_image->entity->getFileUri());
+                        $relativeUrl = file_url_transform_relative($uri);
+
+                        $translation->set('field_header', $relativeUrl);
+                    }
+                } else {
+                    $translation->set('field_header', $mediaId);
+                }
+            }
+        }
+    }
+}

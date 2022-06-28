@@ -1,0 +1,8 @@
+custom_edhec.connectmanager:
+  path: ''
+  defaults:
+    _controller: ''
+    _title: 'Gestionnaire de connection'
+  requirements:
+    _access: 'TRUE'
+    no_cache: 'TRUE'

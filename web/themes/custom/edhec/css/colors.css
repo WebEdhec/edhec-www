@@ -1,0 +1,96 @@
+/* fond-0 = blanc*/
+/* fond-1 = gris*/
+/* fond-2 = rouge*/
+/* fond-3 = rouge fonce*/
+a {color: #A52336; transition: all .3s;}
+a:hover {color: #891E2E;}
+.paragraph.fond.fond-2 *,.fond-2 *, .fond-3 * {color: #fff;}
+.paragraph.fond.fond-2 .fond-2 *, .paragraph.fond .paragraph.fond.fond-2 * {color: #fff;}
+.paragraph--type--text.fond.fond-1 *, .paragraph--type--text.fond.fond-0 * {color: #000;}
+/*
+a.cta.cta-r {color: #fff !important;background: #A52336; clip-path: polygon(100% 0, 100% 80%, 95% 100%, 0 100%, 0 0);}
+a.cta.cta-b {color: #A52336 !important;background: #fff; clip-path: polygon(100% 0, 100% 80%, 95% 100%, 0 100%, 0 0);}
+
+.cta.cta-r:hover, a.cta.cta-r:focus, a.cta.cta-b:hover, a.cta.cta-b:focus {color: #fff!important ;background: #891E2E;}
+
+
+a.cta.cta-b:after,a.cta.link:after {content: url("/themes/custom/edhec/img/f-cta-r.svg");}
+a.cta.cta-r:after,.cta.cta-b:hover:after, a.cta.cta-b:focus:after,a.cta.link.link-b:after {content: url("/themes/custom/edhec/img/f-cta.svg");}
+*/
+
+a.cta-s:before, a.cta.link:before {display: none;}
+.fond-0 a.cta:before { border-bottom: 10px solid #fff; }
+.fond-1 a.cta:before { border-bottom: 10px solid #f0f0f0; }
+.fond-2 a.cta:before { border-bottom: 10px solid #A52336; }
+.fond-3 a.cta:before { border-bottom: 10px solid #891E2E; }
+
+.fond-0 {background: #fff;}
+.fond-1 {background: #F0F0F0;}
+.fond-2 {background: #A52336;}
+.fond-3 {background: #891E2E;}
+.fond-2 .fond-2 {background: #891E2E;}
+
+/* Svg img */
+.fond .fond- .icone-img svg path, .fond-0 .icone-img svg path .fond-1 .icone-img svg path {
+    fill: #A52336 !important;
+    stroke: #A52336 !important;
+}
+.fond-2 .icone-img svg path {
+    fill: #fff !important;
+    stroke: #fff !important;
+}
+
+.fond- .icone-img .svg, .fond-0 .icone-img .svg .fond-1 .icone-img .svg {
+    background-color: #A52336;
+}
+.fond-2 .icone-img .svg {
+    background-color: #A52336;
+}
+.fond-2 .paragraph.paragraph-box * {
+    color: #000;
+}
+.fond-1 .fond-0 .paragraph.paragraph-box, .fond-0 .paragraph.paragraph-box, .fond- .paragraph.paragraph-box {background: #F0F0F0;}
+.fond-1 .paragraph.paragraph-box {background: #fff;}
+.fond-2 .paragraph.paragraph-box {background: #F0F0F0;}
+
+/* Table */
+thead {
+    color: #fff;
+    background: #A52336;
+}
+
+/* Tabs */
+.paragraph.tabulation-1.fond-2 .nav-tabs .nav-link {background: #891E2E;}
+.paragraph.tabulation-1.fond-2 .nav-tabs .nav-link.active, 
+.paragraph.tabulation-1.fond-2 .nav-tabs .nav-link:hover {color: #A52336; background: #fff;}
+.paragraph.tabulation-1.fond-2 .nav-tabs .nav-link.active h3, 
+.paragraph.tabulation-1.fond-2 .nav-tabs .nav-link:hover h3 {color: #A52336;}
+.paragraph.tabulation-1.fond-2 .tab-content {border-top: 1px solid #fff;}
+.paragraph.tabulation-1.fond-2 nav {background: #A52336;}
+
+.paragraph.tabulation-1.fond-0 .nav-tabs .nav-link,
+.paragraph.tabulation-1.fond- .nav-tabs .nav-link {background: #fff; color: #6B6B6B;}
+.paragraph.tabulation-1.fond-0 .nav-tabs .nav-link.active, 
+.paragraph.tabulation-1.fond-0 .nav-tabs .nav-link:hover, 
+.paragraph.tabulation-1.fond- .nav-tabs .nav-link.active, 
+.paragraph.tabulation-1.fond- .nav-tabs .nav-link:hover {
+	color: #A52336; background: #F0F0F0; border-top: 5px solid #A52336 !important;
+}
+.paragraph.tabulation-1.fond-0 .tab-content, .paragraph.tabulation-1.fond- .tab-content {border-top: 0 solid #F0F0F0;background: #F0F0F0;}
+.paragraph.tabulation-1.fond-0 nav,.paragraph.tabulation-1.fond- nav {background: #fff;}
+
+.paragraph.tabulation-1.fond-1 .nav-tabs .nav-link {background: #F0F0F0; color: #6B6B6B;}
+.paragraph.tabulation-1.fond-1 .nav-tabs .nav-link.active, 
+.paragraph.tabulation-1.fond-1 .nav-tabs .nav-link:hover {
+	color: #A52336; background: #fff;  border-top: 5px solid #A52336 !important;
+}
+.paragraph.tabulation-1.fond-1 .tab-content {border-top: 1px solid #fff;background: #fff;}
+/*.paragraph.tabulation-1.fond-1 nav {background: #F0F0F0;}*/
+
+.paragraph.tabulation-0.fond-1, .paragraph.tabulation-0 .nav.nav-pills{background: #F0F0F0;}
+.paragraph.tabulation-0 .tab-content, .paragraph.tabulation-0 .nav-pills .nav-link.active {background: #fff !important;}
+
+.paragraph.tabulation-0.fond-0, .paragraph.tabulation-0.fond-{background: #fff;}
+
+.paragraph.tabulation-0.fond-0.fond-bg-r {background: #A52336;}
+.fond-bg-r .field--name-field-entete>*, .fond-bg-r .field--name-field-footer>* {color: #fff;}

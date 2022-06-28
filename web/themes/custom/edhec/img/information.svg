@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.5" height="20.5" viewBox="0 0 20.5 20.5">
+  <g id="Information" transform="translate(0.25 0.25)">
+    <path id="Tracé_1478" data-name="Tracé 1478" d="M45.256,25.826a1.407,1.407,0,0,0,.955-.312,1.189,1.189,0,0,0,0-1.727,1.408,1.408,0,0,0-.955-.312,1.423,1.423,0,0,0-.936.308,1.158,1.158,0,0,0,0,1.733A1.422,1.422,0,0,0,45.256,25.826Z" transform="translate(-35.279 -19.37)" fill="#a52336"/>
+    <path id="Tracé_1479" data-name="Tracé 1479" d="M43.542,45.975V38.79H40.39v1.2h1.119v5.984H40.39v1.2h4.271v-1.2Z" transform="translate(-32.525 -31.281)" fill="#a52336"/>
+    <path id="Tracé_1480" data-name="Tracé 1480" d="M15,6.111A8.889,8.889,0,1,1,6.111,15,8.9,8.9,0,0,1,15,6.111M15,5A10,10,0,1,0,25,15,10,10,0,0,0,15,5Z" transform="translate(-5 -5)" fill="#a52336" stroke="#a52336" stroke-width="0.5"/>
+  </g>
+</svg>

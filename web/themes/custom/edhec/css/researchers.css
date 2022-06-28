@@ -1,0 +1,111 @@
+.researchers-list .researcher-item .btn-more {
+    cursor: pointer;
+    position: absolute;
+    width: 15px;
+    top: 25px;
+    right: 25px;
+}
+.researchers-list .card-body h5 {
+    cursor: pointer;
+}
+.researchers-list .researcher-item .card-body {
+    min-height: auto;
+}
+
+.researchers-list .researcher-item .card-more .card-text {
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.researchers-list .researcher-item .item-label,
+.researcher-details .item-label {
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.researchers-list .researcher-item .card-body .disp-text {
+    margin-right: 30px;
+}
+
+#block-footerpostuler #ancre-866 {
+    padding: 30px;
+}
+
+/* --------------- Researcher Details --------------- */
+
+.researcher-details .btn-interview {
+    top: 30% !important;
+    z-index: 9999;
+}
+
+@media (max-width: 900px) {
+    .researcher-details .btn-interview {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: inherit !important;
+        width: 100% !important;
+        transform: none !important;
+    }
+}
+
+.researcher-details .interview-link {
+    font-size: 14px;
+}
+
+.researcher-details .contr-disp-dep-exp {
+    min-height: 220px;
+    margin-bottom: 90px;
+    background: #f0f0f0;
+}
+
+.researcher-details .item-text {
+    font-size: 14px;
+}
+
+.researcher-details .disp-dep-exp {
+    background: #a52336;
+    color: white;
+    padding: 30px;
+    clip-path: polygon(100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 0);
+}
+
+.researcher-details .btns-email-cv {
+    clip-path: polygon(100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 0);
+    border-radius: 0 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+.researcher-details .email-cv .bn {
+    font-weight: 500 !important;
+    padding-right: 12px !important;
+}
+
+.researcher-details .email-cv .icon {
+    margin-left: 5px;
+}
+
+.researcher-details .email-cv .bn:after {
+    display: none;
+}
+
+.researcher-details .social-link {
+    color: #403e3e;
+    font-size: 26px;
+    text-decoration: none;
+}
+
+@media (min-width: 768px) {
+    .w-md-75 {
+        width: 75% !important;
+    }
+}
+
+/* --------------- Divers --------------- */
+ul.breadcrumb li {
+    /*color: #454545 !important;*/
+}
+
+ul.breadcrumb a {
+    /*color: #A52336 !important;*/
+}

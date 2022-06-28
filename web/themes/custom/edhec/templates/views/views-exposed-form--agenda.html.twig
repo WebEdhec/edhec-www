@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ * Theme override for a views exposed form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ *
+ * @see template_preprocess_views_exposed_form()
+ */
+#}
+{% if q is not empty %}
+  {#
+    This ensures that, if clean URLs are off, the 'q' is added first,
+    as a hidden form element, so that it shows up first in the POST URL.
+  #}
+{{ q }}
+{% endif %}
+<div class="form--inline clearfix">
+<div class="search filters-parameters">
+  {{ form['cles'] }}
+  <div class="affficher-dans-categories mb-3">{{'Show in categories :'|trans}}</div> 
+  <div class="group-filter-1 d-sm-flex justify-content-between  w-100">
+      {{ form['cible_collapsible'] }}
+      {{ form['format_collapsible'] }}
+      {{ form['campus_collapsible'] }}
+      {{ form['type_collapsible'] }}
+      {{ form['lieu'] }}
+      {{ form['pays_collapsible'] }}
+      {{ form['langue_collapsible'] }}
+  </div>
+  <div class="group-filter-2 d-md-flex w-100">
+    <div class="d-flex">
+      <label for="edit-date-start" class="date-filter-label">{{'Du'|trans}}</label> {{ form['date_start'] }}
+      <label for="edit-date-end" class="date-filter-label ms-2" class="date-filter-label">{{' au'|trans}}</label> {{ form['date_end'] }}
+    </div>
+    <div class="ms-auto">
+      {{ form['actions']['submit'] }}
+    </div>
+
+  </div>
+
+    <div class="sort-bef-combine-title-asc visually-hidden">
+        {{ form['secondary']['#groups']['secondary'][0]['title_ASC'] }}
+    </div>
+    <div class="sort-bef-combine-title-desc visually-hidden">
+        {{ form['secondary']['#groups']['secondary'][0]['title_DESC'] }}
+    </div>
+    <div class="created_ASC visually-hidden">
+        {{ form['secondary']['#groups']['secondary'][0]['created_ASC'] }}
+    </div>
+    <div class="sort-bef-combine-created-desc visually-hidden">
+        {{ form['secondary']['#groups']['secondary'][0]['created_DESC'] }}
+    </div>
+</div>
+
+</div>

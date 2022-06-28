@@ -1,0 +1,13 @@
+<div class="popin" id="{{ config.id }}" data-popin-value="popin-{{ config.cookie_random }}" data-popin-ttl="{{ config.cookie_ttl }}">
+  <div class="overlay" data-action="close"></div>
+  <div class="content">
+    <div class="close" data-action="close">{{ 'Close' | t }}</div>
+    {% if config.image is not empty %}
+      <img src="{{ config.image }}" alt="{{ config.titre }}" />
+  	{% endif %}
+      <h2>{{ config.titre }}</h2>
+      <h3>{{ config.sous_titre }}</h3>
+      <div>{{ config.description }}</div>
+      <a class="bn rouge arrow_next" href="{{ config.lien_cta }}">{{ config.texte_cta }}</a>
+  </div>
+</div>

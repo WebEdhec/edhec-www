@@ -1,0 +1,51 @@
+{% block paragraph %}
+{% block content %}
+
+	
+	<article role="article" class="contextual-region cards node--type-edito node--view-mode-teaser">
+		<div class="node__content">
+			<div class="field--name-field-header">
+				{% if content.field_visuel.0 is not empty  %}
+					{{ content.field_visuel }}
+				{% else %}
+					{% set imagestyle = {
+					  '#theme':      'image_style',
+					  '#style_name': 'height_300',
+					  '#uri':        content.field_contenu_item[0]['#node'].fields.field_header.entity.field_media_image.entity.fileuri,
+					  '#alt':        content.field_contenu_item[0]['#node'].fields.field_header.entity.field_media_image.alt,
+					  '#attributes': { class: 'node-ref-image' },
+					} %}
+					{{ imagestyle }}
+				{% endif %}
+			</div>
+		    <div class="h2">
+		        <a href="{{ path('entity.node.canonical', {'node': content.field_contenu_item[0]['#node'].id()  }) }}" title="{% if content.field_titre_item.0 is not empty  %}{{ content.field_titre_item.0 }}{% else %}{{ content.field_contenu_item[0]['#node'].field_display_titre.value|raw }}{% endif %}" class="bn rouge arrow_next" rel="bookmark">
+		        	{% if content.field_titre_item.0 is not empty  %}
+		        		{{ content.field_titre_item.0 }}
+		        	{% else %}
+		        		{{ content.field_contenu_item[0]['#node'].field_display_titre.value|raw }}
+		        	{% endif %}
+		        </a>
+		    </div>
+
+		    
+			
+			{#{ content.field_contenu_item[0]['#node'].field_display_titre.value|raw }#}
+			{#{ content.field_contenu_item[0]['#node'].fields.path.value.0.alias }#}
+			{#{ file_url(content.field_contenu_item[0]['#node'].fields.field_header.entity.field_media_image.entity.fileuri) }#}
+			{#{ content.field_contenu_item[0]['#node'].fields.field_header.entity.field_media_image.entity.fileuri }#}
+
+			{#% set imagestyle = {
+			  '#theme':      'image_style',
+			  '#style_name': 'height_300',
+			  '#uri':        content.field_contenu_item[0]['#node'].fields.field_header.entity.field_media_image.entity.fileuri,
+			  '#alt':        'Test',
+			  '#attributes': { class: 'swiper-image' },
+			} %}
+
+			{{ imagestyle }#}
+
+	    </div>
+    </article>
+{% endblock %}
+{% endblock paragraph %}

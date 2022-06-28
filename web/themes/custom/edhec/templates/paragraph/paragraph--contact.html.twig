@@ -1,0 +1,52 @@
+{% block paragraph %}
+{% block content %}
+{# Loops through the tab sections again to print the tab section bodies. #}
+<div class="paragraph paragraph-box p-4 coin-3 paragraph--type--contact-item paragraph--view-mode--default">
+	<div class="row g-0 flex-md-row mb-0 position-relative">
+		{% if paragraph.field_photo is not empty %}
+			<div class="col-3 d-flex flex-column position-static">
+					{% set imagestyle = {
+					  '#theme':      'image_style',
+					  '#style_name': 'contact_100_100',
+					  '#alt':        "",
+					  '#uri':        paragraph.field_photo.entity.field_media_image.entity.fileuri,
+					  '#attributes': { class: 'image-decoratif' },
+					} %}
+					{{ imagestyle }}
+
+				{#{ content.field_photo }#}
+			</div>
+			<div class="col-9 ps-3 d-block title-accordion">
+		{% else %}
+			<div class="col-12 d-block title-accordion">
+		{% endif %}
+			<button class="h5">{{ content.field_nom.0 }}</button> 
+			<i class="fa fa-chevron-down accordion-contact-chevron only-mobile"></i>
+        	{{ content.field_autre_msg }}
+		</div>
+
+		<div class="col-12 body-accordion">
+			{% if content.field_telephone.0 is not null %}
+			<div class="pt-2">
+				{% include '/themes/custom/edhec/img/phone.svg' %} {{ content.field_telephone.0 }}
+			</div>
+			{% endif %}
+			{% if content.field_email.0 is not null %}
+			<div class="pt-2">
+				{% include '/themes/custom/edhec/img/email.svg' %} {{ content.field_email.0 }}
+			</div>
+			{% endif %}
+			{% if content.field_lien.0['#url'] is not null %}
+			<div class="pt-2">
+         		<a class="bn arrow_next link link_r" href='{{ content.field_lien.0['#url'] }}'>{{ content.field_lien.0['#title'] }}</a>
+         	</div>
+         {% endif %}
+		</div>
+	</div>   
+        
+        {#{ content.field_texte_b.0 }#}
+</div>
+
+{% endblock %}
+{% endblock paragraph %}
+

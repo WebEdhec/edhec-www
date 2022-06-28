@@ -1,0 +1,525 @@
+<?php
+
+use Drupal\views\ViewExecutable;
+use \Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Load all meta tags for this page.
+ */
+function gtmdatalayer_page_attachments(array&$attachments)
+{
+    // Helper datalayer JS.
+    $attachments['#attached']['library'][] = 'gtmdatalayer/gtmdatalayer_libs';
+}
+
+function gtmdatalayer_views_pre_render(ViewExecutable $view)
+{
+    if ($view) {
+        datalayer_add(array(
+            'drupalMyProperty' => 'lorem',
+        ));
+    }
+}
+
+/**
+ *  Additional entity properties to the Data Layer module
+ */
+function gtmdatalayer_datalayer_meta()
+{
+    return [];
+}
+
+/**
+ * Alter output values
+ */
+function gtmdatalayer_datalayer_alter(&$data_layer)
+{
+    // Check if is admin page
+    $isAminPath = \Drupal::service('router.admin_context')->isAdminRoute();
+
+    if (!$isAminPath) {
+        // Remove unwanted values from the data layer array
+        foreach ($data_layer as $key => $value) {
+            switch ($key) {
+                case 'drupalLanguage':
+                case 'drupalCountry':
+                case 'siteName':
+                case 'userUid':
+                    unset($data_layer[$key]);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /* ------------------------- Every page #16 ------------------------- */
+        // Get breadcrumb current page
+        $breadcrumb = \Drupal::service('breadcrumb')->build(\Drupal::routeMatch())->getLinks();
+        $links = [];
+
+        if (\Drupal::service('path.matcher')->isFrontPage()) {
+            $links[] = (string) t('Home');
+        } else {
+            foreach ($breadcrumb as $key => $value) {
+                if ($value->getText() !== null) {
+                    // dump((string) $value->getText());
+                    $link = (string) $value->getText();
+
+                    if (!in_array($link, $links)) {
+                        $links[] = (string) $value->getText();
+                    }
+                }
+            }
+        }
+
+        $breadcrumb = implode(' > ', $links);
+
+        // Node data
+        $node = \Drupal::routeMatch()->getParameter('node');
+        $contentType = '';
+        $contentTypeName = '';
+        $ciblesNames = '';
+        $childrenCiblesNames = '';
+
+        if ($node instanceof \Drupal\node\NodeInterface) {
+            // Content Type
+            $contentType = $node->getType();
+
+            // Content Type Name
+            $result = \Drupal::entityTypeManager()
+                ->getStorage('node_type')
+                ->loadByProperties([
+                    'type' => $contentType,
+                ]);
+
+            $_contentTypeName = reset($result);
+
+            if ($_contentTypeName) {
+                $contentTypeName = $_contentTypeName->get('name');
+            }
+
+            // Cibles
+            if (isset($node->getFields()['field_cible'])) {
+                $_ciblesNames = [];
+                $_childrenCiblesNames = [];
+
+                foreach ($node->field_cible as $cible) {
+                    if ($cible) {
+                        $_ciblesNames[] = $cible->entity ? trim($cible->entity->getName()) : '';
+
+                        // Children cibles names
+                        $parent = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadParents($cible->entity->id());
+                        $parent = reset($parent);
+
+                        if ($parent) {
+                            $_childrenCiblesNames[] = $parent ? trim($parent->getName()) : '';
+                        }
+                    }
+                }
+
+                $ciblesNames = implode(', ', $_ciblesNames);
+                $childrenCiblesNames = implode(', ', $_childrenCiblesNames);
+            }
+        }
+
+        // Get language
+        $language = strtoupper(\Drupal::languageManager()->getDefaultLanguage()->getId());
+
+        $data_layer = [
+            'event' => 'page',
+            'page' => [
+                'niveau_arborescence' => $breadcrumb,
+                'cible' => $ciblesNames,
+                'specialisation' => '-',
+                'langue' => $language,
+                'page_type' => $contentTypeName,
+            ],
+        ];
+
+        /* ------------------------- End Every page #16 ------------------------- */
+
+        switch ($contentType) {
+            /* ------------------------- Event page #26 ------------------------- */
+            case 'evenement':
+                // Destination
+                $destinationNames = '';
+
+                if (isset($node->getFields()['field_destination'])) {
+                    $_destinationNames = [];
+
+                    foreach ($node->field_destination as $destination) {
+                        if ($destination) {
+                            $_destinationNames[] = $destination->entity ? trim($destination->entity->getName()) : '';
+                        }
+                    }
+
+                    $destinationNames = implode(', ', $_destinationNames);
+                }
+
+                // Types
+                $typesNames = '';
+
+                if (isset($node->getFields()['field_type'])) {
+                    $_typesNames = [];
+
+                    foreach ($node->field_type as $eventType) {
+                        if ($eventType) {
+                            $_typesNames[] = $eventType->entity ? trim($eventType->entity->getName()) : '';
+                        }
+                    }
+
+                    $typesNames = implode(', ', $_typesNames);
+                }
+
+                // Country
+                $country = '';
+
+                if (isset($node->getFields()['field_pays'])) {
+                    $country = $node->field_pays->entity ? trim($node->field_pays->entity->getName()) : '';
+                }
+
+                // City
+                $city = '';
+
+                if (isset($node->getFields()['field_lieu'])) {
+                    $city = trim($node->field_lieu->value);
+                }
+
+                // Campuses
+                $campusesNames = '';
+
+                if (isset($node->getFields()['field_campus'])) {
+                    $_campusesNames = [];
+
+                    foreach ($node->field_campus as $campus) {
+                        if ($campus) {
+                            $_campusesNames[] = $campus->entity ? trim($campus->entity->getName()) : '';
+                        }
+                    }
+
+                    $campusesNames = implode(', ', $_campusesNames);
+                }
+
+                // Format
+                $format = '';
+
+                if (isset($node->getFields()['field_format'])) {
+                    $format = $node->field_format->entity ? trim($node->field_format->entity->getName()) : '';
+                }
+
+                // Langue
+                $langue = '';
+
+                if (isset($node->getFields()['field_langue'])) {
+                    $langue = $node->field_langue[0]->entity->getName() ? $node->field_langue[0]->entity->getName() : '';
+                    $langue = substr($langue, 0, 2); // e.g. En from English
+                    $langue = strtoupper($langue); // e.g. EN
+                }
+
+                // Date
+                $date = '';
+
+                if (isset($node->getFields()['field_date'])) {
+                    $date = $node->field_date->value . ' | ' . $node->field_date->end_value;
+                }
+
+                $data_layer['evenement'] = [
+                    'evenement_nom' => $node->getTitle(),
+                    'evenement_cible' => $ciblesNames,
+                    'evenement_sous_categorie_cible' => $childrenCiblesNames,
+                    'evenement_destination_sites_edhec' => $destinationNames,
+                    'evenement_type' => $typesNames,
+                    'evenement_pays' => $country,
+                    'evenement_ville' => $city,
+                    'evenement_campus' => $campusesNames,
+                    'evenement_format' => $format,
+                    'evenement_langue' => $langue,
+                    'evenement_date' => $date,
+                ];
+
+                break;
+            /* ------------------------- End Event page #26 ------------------------- */
+
+            /* ------------------------- Actuality page #40 ------------------------- */
+            case 'actualite':
+                // Destination
+                $destinationNames = '';
+
+                if (isset($node->getFields()['field_destination'])) {
+                    $_destinationNames = [];
+
+                    foreach ($node->field_destination as $destination) {
+                        if ($destination) {
+                            $_destinationNames[] = $destination->entity ? trim($destination->entity->getName()) : '';
+                        }
+                    }
+
+                    $destinationNames = implode(', ', $_destinationNames);
+                }
+
+                // Types
+                $typesNames = '';
+
+                if (isset($node->getFields()['field_type'])) {
+                    $_typesNames = [];
+
+                    foreach ($node->field_type as $eventType) {
+                        if ($eventType) {
+                            $_typesNames[] = $eventType->entity ? trim($eventType->entity->getName()) : '';
+                        }
+                    }
+
+                    $typesNames = implode(', ', $_typesNames);
+                }
+
+                // Themes
+                $themesNames = '';
+
+                if (isset($node->getFields()['field_thematique'])) {
+                    $_themesNames = [];
+
+                    foreach ($node->field_thematique as $theme) {
+                        if ($theme) {
+                            $_themesNames[] = $theme->entity ? trim($theme->entity->getName()) : '';
+                        }
+                    }
+
+                    $themesNames = implode(', ', $_themesNames);
+                }
+
+                // Emetteur
+                $emetteurNames = '';
+
+                if (isset($node->getFields()['field_destination'])) {
+                    $_emetteurNames = [];
+
+                    foreach ($node->field_emetteur as $emetteur) {
+                        if ($emetteur) {
+                            $_emetteurNames[] = $emetteur->entity ? trim($emetteur->entity->getName()) : '';
+                        }
+                    }
+
+                    $emetteurNames = implode(', ', $_emetteurNames);
+                }
+
+                $data_layer['actualite'] = [
+                    'news_nom' => $node->getTitle(),
+                    'news-cible' => $ciblesNames,
+                    'news_type' => $typesNames,
+                    'news_thematique' => $themesNames,
+                    'news_emetteur' => $emetteurNames,
+                    'news_destination' => $destinationNames,
+                ];
+
+                break;
+            /* ------------------------- End Actuality page #40 ------------------------- */
+
+            /* ------------------------- Prof page #79 ------------------------- */
+            case 'cv':
+                // Departement
+                $departementsNames = '';
+
+                if (isset($node->getFields()['field_departement'])) {
+                    $_departementsNames = [];
+
+                    foreach ($node->field_departement as $departement) {
+                        if ($departement) {
+                            $_departementsNames[] = trim($departement->entity->getName());
+                        }
+                    }
+
+                    $departementsNames = implode(', ', $_departementsNames);
+                }
+
+                // Discipline
+                $disciplinesNames = '';
+
+                if (isset($node->getFields()['field_discipline'])) {
+                    $_disciplinesNames = [];
+
+                    foreach ($node->field_discipline as $discipline) {
+                        if ($discipline) {
+                            $_disciplinesNames[] = $discipline->entity ? trim($discipline->entity->getName()) : '';
+                        }
+                    }
+
+                    $disciplinesNames = implode(', ', $_disciplinesNames);
+                }
+
+                $data_layer['prof'] = [
+                    'prof_faculté' => $departementsNames,
+                    'prof_discipline' => $disciplinesNames,
+                ];
+
+                break;
+            /* ------------------------- End Prof page #79 ------------------------- */
+
+            /* ------------------------- Association page #91 ------------------------- */
+            case 'association':
+                // Programmes
+                $programmesNames = '';
+
+                if (isset($node->getFields()['field_programme'])) {
+                    $_departementsNames = [];
+
+                    foreach ($node->field_programme as $programme) {
+                        if ($programme) {
+                            $_programmesNames[] = $programme->entity ? trim($programme->entity->getName()) : '';
+                        }
+                    }
+
+                    $programmesNames = implode(', ', $_programmesNames);
+                }
+
+                // Campuses
+                $campusesNames = '';
+
+                if (isset($node->getFields()['field_campus'])) {
+                    $_campusesNames = [];
+
+                    foreach ($node->field_campus as $campus) {
+                        if ($campus) {
+                            $_campusesNames[] = $campus->entity ? trim($campus->entity->getName()) : '';
+                        }
+                    }
+
+                    $campusesNames = implode(', ', $_campusesNames);
+                }
+
+                // Categories
+                $categoriesNames = '';
+
+                if (isset($node->getFields()['field_categorie_association'])) {
+                    $_categoriesNames = [];
+
+                    foreach ($node->field_categorie_association as $category) {
+                        if ($category) {
+                            $_categoriesNames[] = $category->entity ? trim($category->entity->getName()) : '';
+                        }
+                    }
+
+                    $categoriesNames = implode(', ', $_categoriesNames);
+                }
+
+                $data_layer['association'] = [
+                    'association_nom' => $node->getTitle(),
+                    'association_programme' => $programmesNames,
+                    'association_campus' => $campusesNames,
+                    'association_categorie' => $categoriesNames,
+                ];
+
+                break;
+            /* ------------------------- End Association page #91 ------------------------- */
+
+            /* ------------------------- Startup page #105 Canceled  ------------------------- */
+            /*case 'startup':
+                // Profile
+                $profile = '';
+
+                if (isset($node->getFields()['field_profil'])) {
+                    $profile = $node->field_profil->entity ? trim($node->field_profil->entity->getName()) : '';
+                }
+
+                // Lieu incubation
+                $lieuIncubation = '';
+
+                if (isset($node->getFields()['field_lieu_d_incubation'])) {
+                    $lieuIncubation = $node->field_lieu_d_incubation->entity ? trim($node->field_lieu_d_incubation->entity->getName()) : '';
+                }
+
+                $data_layer['startup'] = [
+                    'startup_nom' => $node->getTitle(),
+                    'startup_profil' => $profile,
+                    'startup_lieu_incubation' => $lieuIncubation,
+                ];
+
+                break;*/
+            /* ------------------------- End Startup page #105 ------------------------- */
+
+            /* ------------------------- Startup page #111 ------------------------- */
+            case 'actualite_edhecvox':
+                // Categories
+                $categoriesNames = '';
+
+                if (isset($node->getFields()['field_edhec_categorie'])) {
+                    $_categoriesNames = [];
+
+                    foreach ($node->field_edhec_categorie as $category) {
+                        if ($category) {
+                            $_categoriesNames[] = $category->entity ? trim($category->entity->getName()) : '';
+                        }
+                    }
+
+                    $categoriesNames = implode(', ', $_categoriesNames);
+                }
+
+                // Themes
+                $themesNames = '';
+
+                if (isset($node->getFields()['field_thematique'])) {
+                    $_themesNames = [];
+
+                    foreach ($node->field_thematique as $theme) {
+                        if ($theme) {
+                            $_themesNames[] = $theme->entity ? trim($theme->entity->getName()) : '';
+                        }
+                    }
+
+                    $themesNames = implode(', ', $_themesNames);
+                }
+
+                // Topics
+                $topicsNames = '';
+
+                if (isset($node->getFields()['field_topics'])) {
+                    $_topicsNames = [];
+
+                    foreach ($node->field_topics as $topic) {
+                        if ($topic) {
+                            $_topicsNames[] = $topic->entity ? trim($topic->entity->getName()) : '';
+                        }
+                    }
+
+                    $topicsNames = implode(', ', $_topicsNames);
+                }
+
+                $data_layer['actualite EdhecVox'] = [
+                    'vox_nom' => $node->getTitle(),
+                    'vox-cible' => $ciblesNames,
+                    'vox_categorie' => $categoriesNames,
+                    'vox_thematique' => $themesNames,
+                    'vox_topics' => $topicsNames,
+                ];
+
+                break;
+            /* ------------------------- End Startup page #111 ------------------------- */
+            default:
+                break;
+        }
+
+        if (isset($_GET['debug'])) {
+            // dd($data_layer);
+        }
+    }
+}
+
+function gtmdatalayer_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+    if (isset($_GET['debug'])) {
+        // $form['actions']['submit']['#id'] = "edit-submit-publications-recherche";
+    }
+}
+
+/**
+ * Submit form
+ */
+function gtmdatalayer_form_submit($form, FormStateInterface $form_state)
+{
+    try {
+        //dd($form_state->getValue('cles'));
+    } catch (\Throwable$th) {
+        throw $th;
+    }
+}

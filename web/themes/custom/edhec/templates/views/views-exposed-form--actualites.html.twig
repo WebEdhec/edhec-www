@@ -1,0 +1,59 @@
+{#
+/**
+ * @file
+ * Theme override for a views exposed form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ *
+ * @see template_preprocess_views_exposed_form()
+ */
+#}
+{% if q is not empty %}
+  {#
+    This ensures that, if clean URLs are off, the 'q' is added first,
+    as a hidden form element, so that it shows up first in the POST URL.
+  #}
+{{ q }}
+{% endif %}
+<div class="form--inline clearfix">
+    <div class="search filters-parameters">
+      {{ form['cles'] }}
+      <div class="filter-par">{{'Filtrer par :'|trans}} </div> {{ form['cible_collapsible'] }} {{ form['thematique_collapsible'] }} {{ form['type_collapsible'] }} {#{ form['year_collapsible'] }#} {#{ form['year'] }#}
+      {{ form['actions']['submit'] }}
+    
+        <div class="sort-bef-combine-title-asc visually-hidden">
+            {{ form['secondary']['#groups']['secondary'][0]['title_ASC'] }}
+        </div>
+        <div class="sort-bef-combine-title-desc visually-hidden">
+            {{ form['secondary']['#groups']['secondary'][0]['title_DESC'] }}
+        </div>
+        <div class="created_ASC visually-hidden">
+            {{ form['secondary']['#groups']['secondary'][0]['created_ASC'] }}
+        </div>
+        <div class="sort-bef-combine-created-desc visually-hidden">
+            {{ form['secondary']['#groups']['secondary'][0]['created_DESC'] }}
+        </div>
+    </div>
+
+<div class="resultat-filter">
+	{#% if form['cles']['#value'] is not empty %}
+	    <div class="resultat-filter combine">
+	        <label for='cles' class="select-filter-combine"> {{ form['cles']['#value']|raw }} <i>x</i></label>
+	    </div>
+	{% endif %}
+
+	{% if form['year']['#value'] is not empty %}	
+      <label class="select-filter" for="year">{{ form['year']['#value'] }} <i>x</i></label>
+  {% endif %}
+
+  {% if form['thematique']['#value'] is not empty and form['thematique']['#value'] != 'All'%}
+  <label class="select-filter" for="thematique">{{ form['thematique']['#options'][form['thematique']['#value']] }} <i>x</i></label>
+  {% endif %}
+
+    {% if form['type']['#value'] is not empty and form['type']['#value'] != 'All'%}	
+         <label class="select-filter" for="type">{{ form['type']['#options'][form['type']['#value']] }} <i>x</i></label>
+    {% endif %#}
+</div>
+
+</div>

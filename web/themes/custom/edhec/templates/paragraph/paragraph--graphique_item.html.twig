@@ -1,0 +1,15 @@
+{% block paragraph %}
+{% block content %}
+{# Loops through the tab sections again to print the tab section bodies. #}
+<div class="paragraph paragraph--type--graphique_item paragraph--view-mode--default">
+    <div class="charts_libelle" data-graphic-field-label>
+        {{ content.field_libelle.0 }}
+    </div>
+    <div class="charts_complement" data-graphic-field-value>
+        {{ content.field_complement_item.0 }}
+    </div>
+</div>
+
+{% endblock %}
+
+{% endblock paragraph %}

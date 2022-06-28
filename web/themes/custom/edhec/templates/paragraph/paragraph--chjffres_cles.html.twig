@@ -1,0 +1,88 @@
+{#
+/**
+* @file
+* A11Y Paragraphs Tab Wrapper paragraph template.
+*
+* Available variables:
+* - paragraph: Full paragraph entity.
+* Only method names starting with "get", "has", or "is" and a few common
+* methods such as "id", "label", and "bundle" are available. For example:
+* - paragraph.getCreatedTime() will return the paragraph creation timestamp.
+* - paragraph.id(): The paragraph ID.
+* - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
+* - paragraph.getOwnerId(): The user ID of the paragraph author.
+* See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
+* and methods for the paragraph object.
+* - content: All paragraph items. Use {{ content }} to print them all,
+* or print a subset such as {{ content.field_example }}. Use
+* {{ content|without('field_example') }} to temporarily suppress the printing
+* of a given child element.
+* - content.field_a11y_para_tabs_sec_title: Formatted Text field used for the Section Title.
+* - content.field_a11y_para_tabs_tabs_panel: Paragraph Reference Field used to reference the Tabs Panel paragraph.
+* - content.field_a11y_para_tabs_tab_title: Formatted Text field used for the Tab panel Title.
+* - content.field_a11y_para_tabs_tab_content: Paragraph Reference Field used to reference the Tab Content paragraph.
+* - content.field_a11y_para_tabs_text_area: Text Formatted Long field used for adding text.
+* - attributes: HTML attributes for the containing element.
+* The attributes.class element may contain one or more of the following
+* classes:
+* - paragraphs: The current template type (also known as a "theming hook").
+* - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
+* "Image" it would result in "paragraphs--type--image". Note that the machine
+* name will often be in a short form of the human readable label.
+* - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
+* preview would result in: "paragraphs--view-mode--preview", and
+* default: "paragraphs--view-mode--default".
+* - view_mode: View mode; for example, "preview" or "full".
+* - logged_in: Flag for authenticated user status. Will be true when the
+* current user is a logged-in member.
+* - is_admin: Flag for admin user status. Will be true when the current user
+* is an administrator.
+*
+*/
+#}
+{# Sets Unique ID for Accordion from Paragraph ID. #}
+{% set section_id = 'section' ~ paragraph.id.value %}
+
+{% block paragraph %}
+{% block content %}
+{# Loops through the tab sections again to print the tab section bodies. #}
+
+{% if (content.field_encadres['#items'].getValue()|first.value == 1) %}
+<div id="ancre-{{paragraph.id.value}}" class="paragraph paragraph--chjffres_cles reveal js-animation-chiffres-container p-50 paragraph--view-mode--default fond fond-1">
+<div class="paragraph_bg container pe-0 ps-0 pb-2">
+  <div class="paragraph container paragraph--type--encadre p-50 coin-3 fond fond-0">
+       <div class="container position-relative {% if (content.field_decroche['#items'].getValue()|first.value == 1) %} bloc-decroche  fond-1 {% endif %}">
+        {{ content.field_entete }}
+        <div class="item-list row p-3 justify-content-center">
+          {% for key, item in content.field_chiffres if key|first != '#' %}
+                    <div class="field box-number text-md-center col-md-3 col-12">
+                       {{ item }}
+                    </div>
+            {% endfor %}
+        </div>
+         
+        {{ content.field_footer }}
+    </div>
+
+  </div>
+</div>
+</div>
+{% else %}
+
+<div id="ancre-{{paragraph.id.value}}" class="paragraph paragraph--chjffres_cles reveal js-animation-chiffres-container p-50 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}">
+    <div class="container position-relative  {% if (content.field_decroche['#items'].getValue()|first.value == 1) %} bloc-decroche fond-1 {% endif %}">
+        {{ content.field_entete }}
+        <div class="item-list row p-3 justify-content-center">
+          {% for key, item in content.field_chiffres if key|first != '#' %}
+                    <div class="field box-number text-md-center col-md-3 col-12">
+                       {{ item }}
+                    </div>
+            {% endfor %}
+        </div>
+         
+        {{ content.field_footer }}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% endblock paragraph %}

@@ -1,0 +1,44 @@
+custom_import.homepage:
+  title: 'Import: Accueil'
+  route_name: custom_import.homepage
+  base_route: custom_import.homepage
+
+custom_import.communique_de_presse:
+  title: 'Import: Communique de Presse'
+  route_name: custom_import.communique_de_presse
+  base_route: custom_import.homepage
+
+custom_import.association:
+  title: 'Import: Association'
+  route_name: custom_import.association
+  base_route: custom_import.homepage
+
+custom_import.start_up:
+  title: 'Import: Start Up'
+  route_name: custom_import.start_up
+  base_route: custom_import.homepage
+
+custom_import.actualites:
+  title: 'Import: Actualites'
+  route_name: custom_import.actualites
+  base_route: custom_import.homepage
+
+custom_import.evenements:
+  title: 'Import: Evenements'
+  route_name: custom_import.evenements
+  base_route: custom_import.homepage
+
+custom_import.vox:
+  title: 'Import: Vox'
+  route_name: custom_import.vox
+  base_route: custom_import.homepage
+
+custom_import.theses_phd:
+  title: 'Import: Theses PHD'
+  route_name: custom_import.theses_phd
+  base_route: custom_import.homepage
+
+custom_import.terms_form:
+  title: 'Import: Terms'
+  route_name: custom_import.terms_form
+  base_route: custom_import.homepage

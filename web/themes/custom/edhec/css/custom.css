@@ -1,0 +1,226 @@
+.actualite-proprietes {
+    display: flex;
+}
+.actualite-proprietes a {
+    text-decoration: none;
+    color: gray;
+}
+.actualite-infos {
+    display: flex;
+}
+.actualite-infos span {
+    margin-right: 5px;
+}
+.bef-exposed-form .form-item-cles label {
+    display: none;
+}
+/*Agenda CSS*/
+.view-agenda .card-title {
+    font-weight: 600;
+}
+.group-filter-2 legend {
+    display: none;
+}
+.group-filter-2 .fieldset-wrapper {
+    display: flex;
+}
+.group-filter-2 .bef-datepicker {
+    background: transparent;
+    border: none;
+    border: 1px solid #fff;
+    width: 140px;
+    height: 50px;
+}
+.affficher-dans-categories {
+    min-width: 100%;
+}
+.filters-parameters .group-filter-1 .form-type-select,
+.filters-parameters .group-filter-1 .form-item-destination button {
+    margin-left: 0;
+}
+.date-filter-label {
+    line-height: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+.form-type-checkbox {
+    display: flex;
+}
+details#edit-langue-collapsible summary {
+    margin-right: 0;
+}
+.evenement-infos-1 {
+    display: flex;
+    gap: 10px;
+}
+.evenement-buttons a {
+    width: 49%;
+    text-align: center;
+}
+.evenement-buttons .arrow_next {
+    float: right;
+}
+.evenement-buttons .bn:first-child:after {
+    right: 100px;
+}
+.evenement-buttons .bn:nth-child(2):after {
+    right: 160px;
+}
+.evenement-infos {
+    background: #fff;
+}
+.evenement-infos-1,
+.evenement-infos-2 {
+    padding: 20px 15px 0px 15px
+}
+.evenement-infos {
+    color: #454545;
+}
+.evenement-chapo {
+    font-weight: 500;
+}
+.evenement-infos-2 {
+    gap: 20px;
+}
+.evenement-infos-2 div {
+    display: flex;
+}
+.btn-sinscrire {
+    position: absolute;
+    right: 0px;
+    bottom: -8px;
+}
+.field--name-field-s-inscrire a {
+    color: #fff;
+}
+.form-item-lieu {
+    margin-top: 0 !important;
+}
+.form-item-lieu .form-text {
+    background: #a52336 !important;
+    border-radius: 0;
+    padding: 13px 13px 13px 10px;
+    border: 1px solid #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+    width: 100px;
+    color: #fff;
+    margin-right: 10px;
+}
+.evenement-button {
+    text-align: center;
+}
+.evenement-button .dropdown-toggle {
+    transition: all .3s;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    width: 100%;
+    clip-path: polygon(100% 0, 100% 80%, 98% 100%, 0 100%, 0 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: normal;
+}
+.evenement-button-inscription {
+    clip-path: polygon(100% 0, 100% 80%, 98% 100%, 0 100%, 0 0);
+    cursor: pointer;
+    position: relative;
+}
+.evenement-button a {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 14px;
+}
+.addtocalendar a {
+    margin: 0 auto;
+    width: auto;
+    font-size: 14px;
+    font-weight: bold;
+}
+.evenement-button .placeholder {
+    color: #fff;
+    font-style: normal;
+}
+.evenement-button .addtocalendar a:after {
+    content: url('../img/calendrier-b.svg');
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: -30px;
+}
+.evenement-button .field--name-field-s-inscrire a:after {
+    content: url(../img/f-cta.svg);
+    width: 20px;
+    height: 20px;
+    position: relative;
+    right: -15px;
+    bottom: -3px;
+}
+.no-result-found {
+    color: #a52336;
+    font-size: 30px;
+    font-weight: 500;
+}
+.hide {
+    display: none;
+}
+ul.dropdown-menu.show {
+    width: 97%;
+}
+.evenement-button svg {
+    margin-left: 15px;
+    width: 45px;
+}
+.evenement-button svg path,
+.evenement-button svg circle{
+    fill: #fff;
+}
+.evenement-button button {
+    z-index:99;
+}
+/*Theming Publications*/
+.view-publications .views-field-title a {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+.view-publications .views-field-title,
+.view-publications .views-field.views-field-field-cible {
+    margin-bottom: 10px;
+}
+.view-publications .views-field.views-field-field-cible a {
+    font-size: 13px;
+    font-family: 'Montserrat', sans-serif;
+    color: #454545;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.view-publications .views-field-field-auteurs-externe-1 {
+    border: 1px solid #d5cece;
+    padding: 3px;
+    border-radius: 5px;   
+}
+#edit-year-of-publication {
+   position: initial !important;
+   width: auto !important;
+   padding: 0 !important;
+}
+.rotate-arrow {
+    transform: rotate(180deg);
+    transition: all 0.3s linear;
+}
+.skip-link { 
+    display: inline-block; 
+    height: 0; 
+    overflow: hidden; 
+ } 
+ .skip-link:focus { 
+    height: auto; 
+    overflow: visible; 
+ }

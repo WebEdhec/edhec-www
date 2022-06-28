@@ -1,0 +1,5 @@
+name: Custom Import
+description: Custom Import
+core_version_requirement: '^8 || ^9'
+package: custom
+type: module

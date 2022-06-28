@@ -1,0 +1,9 @@
+gtmdatalayer_libs:
+  version: 1.0
+  js:
+    js/common.js: {} 
+    js/searchForm.js: {} 
+    js/cta.js: {} 
+    js/navigation.js: {} 
+  dependencies:
+    - core/jquery

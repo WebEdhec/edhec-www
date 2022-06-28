@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * Theme override for a views exposed form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ *
+ * @see template_preprocess_views_exposed_form()
+ */
+#}
+{% if q is not empty %}
+	{#
+										This ensures that, if clean URLs are off, the 'q' is added first,
+										as a hidden form element, so that it shows up first in the POST URL.
+									#}
+	{{ q }}
+{% endif %}
+
+<div class="search-result">
+	<h2 class="label-search-result">{{"Search results"|trans}}</h2>
+	<span class="val-search-result">$v{results.count} {{"result(s) for:"|trans}}</span>
+</div>
+
+<div class="form--inline clearfix">
+	{# 
+		<div class="d-none">
+			{{ form['type'] }}
+			{{ form['actions']['submit'] }}
+		</div> 
+	#}
+
+	{# Keyword search #}
+		<div class="form-outline keyword-search"> {# <input type="text" id="keywordSearch" class="form-control" placeholder="Mot clé recherché" v-model="keywordSearch"/> #}
+
+		<div class="row">
+			<div class="col-md-10 position-relative">
+				<div id="keywordSearch"></div>
+				<span class="icon-search"></span>
+			</div>
+
+			<div class="col-md-2">
+				<input type="button" value="{{"Validate"|trans}}" class="button form-submit btn btn-primary search-submit" @click="search">
+			</div>
+		</div>
+
+	</div>
+
+	{# Tabs Filter #}
+	<ul class="nav nav-tabs" id="taxonomyFilter" role="tablist" v-if="results.count && taxonomies[taxonomyAllIndex].resultCount">
+		<li class="nav-item service-edhec" v-for="taxonomy in taxonomies">
+			<a v-if="taxonomy && taxonomy.resultCount" class="nav-link" :class="{active: (filters.currentTaxonomyFilter == taxonomy.key) || taxonomy.key == 'All'}" :id="`taxonomyFilter_${taxonomy.key}`" href="javascript:void(0)" role="tab" :aria-controls="`taxonomyFilter_${taxonomy.key}`" aria-selected="true" @click="filterByTaxonomy(taxonomy.key, $event)">
+				$v{ taxonomy.key == 'All' ? '{{"All"|trans}}' : taxonomy.value } ($v{ taxonomy.resultCount })</a>
+		</li>
+	</ul>
+</div>

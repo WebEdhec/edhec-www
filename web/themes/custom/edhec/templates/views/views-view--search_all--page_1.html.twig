@@ -1,0 +1,206 @@
+{#
+/**
+ * @file
+ * Theme override for a main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   JavaScript.
+ *
+ * @see template_preprocess_views_view()
+ */
+#}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+	'search-content'
+  ]
+%}
+
+<script>
+	// Init JS DATA
+try {
+var taxonomiesJson = "{{ view.exposed_widgets['field_cible_group']['#options']|json_encode()|escape('js') }}";
+var contentTypesJson = "{{ view.exposed_widgets['type']['#options']|json_encode()|escape('js') }}";
+
+var taxonomies = JSON.parse(taxonomiesJson);
+var contentTypes = JSON.parse(contentTypesJson);
+
+// Translations
+var transKeywordSearch = '{{ "Searched keyword"|trans }}'
+var transNoResults = '{{ "No results found"|trans }}'
+
+} catch (error) {}
+</script>
+
+<div{{attributes.addClass(classes)}} id="v-app">
+	<div class="ed-loader" v-if='loader'>EDHEC</div>
+
+	<div class="v-content d-none">
+		<div class="node__content bg-main-">
+			<div class="hero-no-img fond-2">
+				<div class="container">
+
+					<div class="row">
+						<div class="col-lg-12 col-12 w-990">
+							{% if exposed %}
+								<div class="view-filters">
+									{{ exposed }}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="container p-50 pe-xl-0 ps-xl-0">
+			<div class="row">
+				<div
+					class="col-lg-2 col-12">
+					{# Content Type Filter #}
+					<div id="contentTypeFilter">
+						<div v-for="contentType in contentTypes">
+							<div class="form-check" v-if="contentType && contentType.resultCount">
+								<input class="form-check-input input-content-type" type="checkbox" name="contentTypeFilter[]" :value="contentType.key" :id="`contentTypeFilter_${contentType.key}`" @click="filterByContentType(`'${contentType.key}'`, $event)"/>
+								<label class="form-check-label label-content-type" :for="`contentTypeFilter_${contentType.key}`">$v{ contentType.value } ($v{ contentType.resultCount })</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-10 col-12 w-990 result-list">
+					{% if header %}
+						<div class="view-header">
+							{{ header }}
+						</div>
+					{% endif %}
+					{% if attachment_before %}
+						<div class="attachment attachment-before">
+							{{ attachment_before }}
+						</div>
+					{% endif %}
+
+					<div
+						class="view-content" v-if="results.list.length">
+						{# Search Result #}
+						<div class="listing shadow- cards views-row pt-0 views-row" v-for="item in results.list">
+							<div class="views-field views-field-nothing coin-3">
+								<div class="row g-0">
+
+									<div class="col-12 d-block d-sm-none d-flex justify-content-start align-items-center">
+										<div class="media media--blazy media--bundle--image media--image is-b-loaded search-img">
+											<img alt="" title="" class="media__image media__element b-lazy img-fluid b-loaded" :src="item.field_header" width="150" height="80" loading="lazy" typeof="Image">
+										</div>
+										<div class="ps-3">$v{item.type}</div>
+									</div>
+									<div class="col-md-3 d-none d-sm-block" v-if="item.field_header">
+										<div class="media media--blazy media--bundle--image media--image is-b-loaded">
+											<img alt="" title="" class="media__image media__element b-lazy img-fluid b-loaded" :src="item.field_header" width="220" height="220" loading="lazy" typeof="Image">
+										</div>
+									</div>
+
+									<div class="col-md-9">
+										<div class="card-body">
+											<div class="created-date d-none d-sm-block">$v{item.type}</div>
+											<h5 class="card-title text-uppercase">$v{item.title}</h5>
+											<div class="card-text chapo d-none d-sm-block">
+												<p>$v{truncate(item.field_chapo)}</p>
+											</div>
+											<div class="d-flex">
+												<div class="card-text read-more btn-read-more">
+													<a :href="item.view_node" target="_blank">{{"Learn more"|trans}}</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{# End Search Result #}
+
+						{# Pagination | DEFAULT PAGE NUMBER = 0 #}
+						<nav aria-label="Pagination" aria-labelledby="pagination-heading--yjDnQ93uiXk" v-if="results.list.length && results.pagination.nbPages > 1">
+							<ul class="pagination">
+								<li class="page-item pager__item--previous" v-if="results.pagination.page" @click="paginate('prev')">
+									<a href="javascript:void(0)" title='{{"Go to previous page"|trans}}' rel="prev" class="page-link">
+										<span class="visually-hidden">{{"Previous page"|trans}}</span>
+										<span aria-hidden="true">‹‹</span>
+									</a>
+								</li>
+
+								<li class="page-item active" aria-current="page">
+									<a href="javascript:void(0)" title='{{"Current page"|trans}}' class="page-link">
+										<span class="visually-hidden">
+											{{"Current page"|trans}}
+											{# DEFAULT PAGE NUMBER = 0 #}
+										</span>$v{results.pagination.page + 1} / $v{results.pagination.nbPages}</a>
+								</li>
+
+								{# DEFAULT PAGE NUMBER = 0 #}
+								<li class="page-item pager__item--next" v-if="results.pagination.page < (results.pagination.nbPages - 1)">
+									<a href="javascript:void(0)" title='{{"Go to next page"|trans}}' rel="next" class="page-link" @click="paginate('next')">
+										<span class="visually-hidden">{{"Next page"|trans}}</span>
+										<span aria-hidden="true">››</span>
+									</a>
+								</li>
+							</ul>
+						</nav>
+						{# End Pagination #}
+					</div>
+
+					<div class="no-result-found text-center" v-else-if="!results.list.length && !loader">
+						{{"No results found"|trans}}
+					</div>
+
+					{% if attachment_after %}
+						<div class="attachment attachment-after">
+							{{ attachment_after }}
+						</div>
+					{% endif %}
+
+					{% if more %}
+						{{ more }}
+					{% endif %}
+
+					{% if footer %}
+						<div class="view-footer">
+							{{ footer }}
+						</div>
+					{% endif %}
+
+					{% if feed_icons %}
+						<div class="feed-icons">
+							{{ feed_icons }}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

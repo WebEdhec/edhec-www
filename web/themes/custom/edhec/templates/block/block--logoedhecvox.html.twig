@@ -1,0 +1,24 @@
+{% extends "block.html.twig" %}
+{#
+/**
+ * @file
+ * Theme override for a branding block.
+ *
+ * Each branding element variable (logo, name, slogan) is only available if
+ * enabled in the block configuration.
+ *
+ * Available variables:
+ * - site_logo: Logo for site as defined in Appearance or theme settings.
+ * - site_name: Name for site as defined in Site information settings.
+ * - site_slogan: Slogan for site as defined in Site information settings.
+ */
+#}
+{% block content %}
+  <div class="navbar-brand-vox d-flex align-items-center container">
+    <button class="btn-menuvox" type="button" aria-expanded="false">
+            <span class="menuvox-label focusable label-menu">Menu</span>
+            <span class="menuvox-label focusable label-close">{{'Fermer'|trans}}</span>
+    </button>
+    <a href="{{'/edhecvox'|trans}}">{{ content.field_image }} </a>
+  </div>
+{% endblock %}

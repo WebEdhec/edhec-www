@@ -1,0 +1,30 @@
+{% extends "block.html.twig" %}
+{#
+/**
+ * @file
+ * Theme override for a branding block.
+ *
+ * Each branding element variable (logo, name, slogan) is only available if
+ * enabled in the block configuration.
+ *
+ * Available variables:
+ * - site_logo: Logo for site as defined in Appearance or theme settings.
+ * - site_name: Name for site as defined in Site information settings.
+ * - site_slogan: Slogan for site as defined in Site information settings.
+ */
+#}
+{% block content %}
+<div class="navbar-brand d-flex align-items-center">
+  {% if site_logo %}
+     {% if is_front %}
+      <h1>   
+        <img src="{{ site_logo }}" alt="{{ 'EDHEC Business School'|t }}" />
+      </h1>
+    {% else %}
+      <a href="{{ path('<front>') }}" title="{{ "EDHEC Business School(Aller à la page d'accueil)"|t }}" rel="home" class="site-logo d-block">   
+        <img src="{{ site_logo }}" alt="{{ 'EDHEC Business School'|t }}" />
+      </a>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+.footer-bottom-region {
+	background: #454545;
+	padding: 10px 0;
+}
+.region-foot a.don {
+    clip-path: polygon(100% 0, 100% 80%, 95% 100%, 0 100%, 0 0);
+}
+footer {
+	background:#f0f0f0;
+	/*border-top: 2px solid #fff;*/
+}
+a.icon-facebook,
+a.icon-twitter,
+a.icon-instagram,
+a.icon-youtube,
+a.icon-linkedin,
+a.icon-chat,
+a.icon-tiktok {
+	text-indent: -99999px;
+	width: 30px;
+	height: 30px;
+	background: url("../img/facebook.svg") center center no-repeat;
+	display: inline-block;
+	margin: 0 5px;
+}
+
+a.icon-twitter {
+	background: url("../img/twitter.svg") center center no-repeat;
+}
+a.icon-instagram {
+	background: url("../img/instagram.svg") center center no-repeat;
+}
+a.icon-youtube {
+	background: url("../img/youtube.svg") center center no-repeat;
+}
+a.icon-linkedin {
+	background: url("../img/linkedin.svg") center center no-repeat;
+}
+a.icon-chat {
+	background: url("../img/chat.svg") center center no-repeat;
+}
+a.icon-tiktok {
+	background: url("../img/tiktok.svg") center center no-repeat;
+}
+
+/* Administrator */
+.toolbar-tray-open #block-edhec-local-tasks {
+    position: fixed;
+    bottom: 0;
+    z-index: 99999;
+    background: #fff;
+}
+
+.toolbar-tray-open nav.tabs-wrapper.tabs-primary.is-collapsible .slick-list.draggable {
+    margin-bottom: 0 !important;
+}
+
+.toolbar-tray-open nav.tabs-wrapper.tabs-primary.is-collapsible {
+    margin: 0;
+}
+.alert.alert-status {
+    padding: 1.25rem 1rem;
+}
+@media (min-width: 1300px) {
+	#block-footermenu ul li {
+	    min-width: 170px;
+	    display: flex;
+	}
+}

@@ -1,0 +1,6 @@
+name: custom edhec
+type: module
+description: Say Hello custom edhec
+package: Custom
+core: 8.x
+core_version_requirement: '^8 || ^9'

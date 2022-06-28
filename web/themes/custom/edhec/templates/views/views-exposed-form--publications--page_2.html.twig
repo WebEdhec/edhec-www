@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Theme override for a views exposed form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ *
+ * @see template_preprocess_views_exposed_form()
+ */
+#}
+{% if q is not empty %}
+  {#
+    This ensures that, if clean URLs are off, the 'q' is added first,
+    as a hidden form element, so that it shows up first in the POST URL.
+  #}
+{{ q }}
+{% endif %}
+<div class="form--inline clearfix">
+  <div class="search filters-parameters">
+    {{ form['cles'] }}
+    <div class="filter-par">{{'Filtrer par :'|trans}}  </div> {{ form['type_collapsible'] }} {{ form['campus_collapsible'] }} {{ form['date_de_publication_collapsible'] }} {{ form['year_of_publication_collapsible'] }}
+    {{ form['actions']['submit'] }}
+  </div>
+</div>

@@ -1,0 +1,329 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\node\Entity\Node;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/* function edhec_form_alter(&$form, &$form_state, $form_id)
+{
+if ($form_id == 'views_exposed_form') {
+if ($form['#id'] == 'views-exposed-form-agenda-page-1') {
+$form['date_start']['min']['#date_format'] = 'd/m/Y';
+$form['date_end']['max']['#date_format'] = 'd/m/Y';
+}
+}
+} */
+
+/**
+ * @addtogroup hooks
+ * @{
+ */
+
+function custom_edhec_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+    $authorizedViews = [
+        'views-exposed-form-publications-page-1', // type: publication
+        'views-exposed-form-publications-recherche-page-1', // type: publication
+        'views-exposed-form-publications-page-2', // type: these_phd
+    ];
+
+    if (isset($form['#id']) && in_array($form['#id'], $authorizedViews)) {
+        $options = &drupal_static(__FUNCTION__);
+
+        if (is_null($options)) {
+            $options = [];
+
+            $query = \Drupal::entityQuery('node');
+
+            switch ($form['#id']) {
+                case 'views-exposed-form-publications-page-1':
+                case 'views-exposed-form-publications-recherche-page-1':
+                    $contentType = 'publication';
+                    break;
+                case 'views-exposed-form-publications-page-2':
+                    $contentType = 'these_phd';
+                    break;
+                default:
+                    $contentType = '';
+            }
+
+            if ($contentType) {
+                $query->condition('type', $contentType)
+                    ->condition('status', 1)
+                    ->sort('field_date_de_publication', 'ASC')
+                    ->range(0, 1);
+
+                $result = $query->execute();
+
+                $countExist = count($result);
+                $nodeId = reset($result);
+
+                if ($countExist) {
+                    $node = Node::load($nodeId);
+
+                    $date = $node->getFields()['field_date_de_publication']->getValue()[0]['value'];
+                    $firstYear = date('Y', strtotime($date));
+                }
+            } else {
+                $firstYear = 2000;
+            }
+
+            for ($year = date('Y'); $year >= $firstYear; $year--) {
+                if ($year && !isset($options[$year])) {
+                    $options[$year] = (int) $year;
+                }
+            }
+
+            // Building a new form element
+            if (isset($form['type_collapsible'])) {
+                $form['year_of_publication'] = $form['type'];
+                $form['year_of_publication']['#group'] = "year_of_publication_collapsible";
+                $form['year_of_publication']['#options'] = $options;
+                $form['year_of_publication']['#size'] = count($options);
+                // Collapsible
+                $form['year_of_publication_collapsible'] = $form['type_collapsible'];
+                $form['year_of_publication_collapsible']['#title'] = new TranslatableMarkup('Year');
+            }
+        }
+    }
+}
+
+function custom_edhec_preprocess_block(&$vars)
+{
+    $blocks = [
+        'views_block:actualites-block_6',
+        'views_block:actualites-block_4',
+        'views_block:actualites-block_7',
+        'views_block:agenda-block_4',
+        'views_block:agenda-block_5',
+        'views_block:edhecvox_block_7',
+        'views_block:edhecvox_block_8',
+        'views_block:publications_recherche_block_4',
+    ];
+
+    if (in_array($vars['plugin_id'], $blocks)) {
+        //-- This stops the block being cache in drupal 8
+        $vars['#cache']['max-age'] = 0;
+    }
+}
+
+function custom_edhec_views_query_alter(ViewExecutable $view, QueryPluginBase $query)
+{
+    // 3 latest news from meme target (remonté auto) // @TODO (multiple blocs)
+
+    $storageIds = [
+        'actualites',
+        'agenda',
+        'publications_recherche',
+    ];
+
+    $displays = [
+        'block_4',
+        'block_7',
+    ];
+
+    if (in_array($view->storage->get('id'), $storageIds) && in_array($view->current_display, $displays)) {
+        try {
+            $node = \Drupal::routeMatch()->getParameter('node');
+
+            if ($node && isset($node->getFields()['field_section'])) {
+
+                $fieldsSection = $node->getFields()['field_section']->getValue();
+
+                foreach ($fieldsSection as $key => $section) {
+
+                    $paragraphId = $section['target_id'];
+
+                    $paragraph = \Drupal::entityTypeManager()->getStorage('paragraph')->load($paragraphId);
+
+                    // Check if the field contenu exist
+                    if (isset($paragraph->getFields()['field_contenu'])) {
+                        $fieldContenu = $paragraph->getFields()['field_contenu']->getValue()[0];
+                        $fieldContenuId = $fieldContenu['target_id'];
+
+                        $paragraphContenu = \Drupal::entityTypeManager()->getStorage('paragraph')->load($fieldContenuId);
+
+                        // Check if the field cible and field bloc exists
+                        if (isset($paragraphContenu->getFields()['field_cible']) && isset($paragraphContenu->getFields()['field_bloc'])) {
+
+                            $blocks = [
+                                'views_block__actualites_block_4',
+                                'views_block__actualites_block_7',
+                                'views_block__agenda_block_4',
+                                'views_block__publications_recherche_block_4',
+                            ];
+
+                            $currentBlockId = $paragraphContenu->getFields()['field_bloc']->getValue()[0]['target_id'];
+
+                            // @TODO (multiple blocs)
+                            if (in_array($currentBlockId, $blocks)) {
+                                $fieldCible = $paragraphContenu->getFields()['field_cible']->getValue()[0];
+                                $cibleId = $fieldCible['target_id'];
+
+                                switch ($currentBlockId) {
+                                    case 'views_block__actualites_block_4':
+                                        $blockActCibleId = $cibleId;
+                                        break;
+                                    case 'views_block__actualites_block_7':
+                                        $blockVoxCibleId = $cibleId;
+                                        break;
+                                    case 'views_block__agenda_block_4':
+                                        $blockAgendaCibleId = $cibleId;
+                                        break;
+                                    case 'views_block__publications_recherche_block_4':
+                                        $blockPublicationsCibleId = $cibleId;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // @TODO (multiple blocs)
+                if ($view->storage->get('id') == 'actualites' && $view->current_display == "block_4" && isset($blockActCibleId)) {
+                    $query->addWhereExpression(2, "node__field_cible.field_cible_target_id = $blockActCibleId");
+                } else if ($view->storage->get('id') == 'actualites' && $view->current_display == "block_7" && isset($blockVoxCibleId)) {
+                    $query->addWhereExpression(2, "node__field_cible.field_cible_target_id = $blockVoxCibleId");
+                }else if ($view->storage->get('id') == 'agenda' && $view->current_display == "block_4" && isset($blockAgendaCibleId)) {
+                    $query->addWhereExpression(2, "node__field_cible.field_cible_target_id = $blockAgendaCibleId");
+                } else if ($view->storage->get('id') == 'publications_recherche' && $view->current_display == "block_4" && isset($blockPublicationsCibleId)) {
+                    $query->addWhereExpression(2, "node__field_cible.field_cible_target_id = $blockPublicationsCibleId");
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
+    // Filter par cible du node courant
+    if (($view->current_display == 'block_6' && $view->storage->get('id') == 'actualites') || ($view->current_display == 'block_5' && $view->storage->get('id') == 'agenda')) {
+
+        $node = \Drupal::routeMatch()->getParameter('node');
+        $cibleIds = [];
+
+        if ($node) {
+            $cibles = $node->get('field_cible')->getValue();
+
+            if (count($cibles)) {
+                foreach ($cibles as $cible) {
+                    $cibleIds[] = $cible['target_id'];
+                }
+            }
+
+            $implodedCibleIds = implode(',', $cibleIds);
+
+            if ($implodedCibleIds) {
+                $query->addWhereExpression(1, "node__field_cible.field_cible_target_id IN ($implodedCibleIds)");
+            }
+
+            $query->addWhereExpression(1, 'node_field_data.nid != ' . $node->id());
+        }
+    }
+
+    // Filter par Categorie du node edhecvox courant
+    if (($view->current_display == 'block_7' && $view->storage->get('id') == 'edhecvox')) {
+
+        $node = \Drupal::routeMatch()->getParameter('node');
+        $categoryIds = [];
+
+        if ($node) {
+            $categories = $node->get('field_edhec_categorie')->getValue();
+
+            if (count($categories)) {
+                foreach ($categories as $category) {
+                    $categoryIds[] = $category['target_id'];
+                }
+            }
+
+            $implodedCategoryIds = implode(',', $categoryIds);
+
+            if ($implodedCategoryIds) {
+                $query->addWhereExpression(1, "node__field_edhec_categorie.field_edhec_categorie_target_id IN ($implodedCategoryIds)");
+            }
+
+            $query->addWhereExpression(1, 'node_field_data.nid != ' . $node->id());
+        }
+    }
+
+    // Filter par auteur (edhecvox)
+    if (($view->current_display == 'block_8' && $view->storage->get('id') == 'edhecvox')) {
+
+        $node = \Drupal::routeMatch()->getParameter('node');
+        $auteurIds = [];
+
+        if ($node) {
+            $auteurIds[] = $node->id();
+
+            $implodedAuteurIds = implode(',', $auteurIds);
+
+            if ($implodedAuteurIds) {
+                $query->addWhereExpression(1, "node__field_auteurs.field_auteurs_target_id IN ($implodedAuteurIds)");
+            }
+
+            //$query->addWhereExpression(1, 'node_field_data.nid != ' . $node->id());
+        }
+    }
+
+    // Alter publication date
+    $authorizedViews = [
+        'publications',
+        'publications_recherche',
+    ];
+
+    $authorizedDisplays = [
+        'page_1',
+        'page_2',
+    ];
+
+    if (in_array($view->storage->get('id'), $authorizedViews) && in_array($view->current_display, $authorizedDisplays)) {
+
+        if (isset($view->exposed_data['year_of_publication'])) {
+
+            // Get selected values from year filter
+            $values = [];
+
+            foreach ($view->exposed_data['year_of_publication'] as $year => $value) {
+                if ($value) {
+                    $values[] = $value;
+                }
+            }
+
+            // Add Relationship with date table
+            if (count($values)) {
+                $values = implode(",", $values);
+
+                $definition = array(
+                    'table' => 'node__field_date_de_publication',
+                    'field' => 'entity_id',
+                    'left_table' => 'node_field_data',
+                    'left_field' => 'nid',
+                );
+
+                $join = \Drupal\views\Views::pluginManager('join')->createInstance('standard', $definition);
+
+                $query->addRelationship('node__field_date_de_publication', $join, 'node_field_data');
+
+                $date_format = $query->getDateFormat("node__field_date_de_publication.field_date_de_publication_value", "Y") . " IN (" . $values . ")";
+
+                $query->addWhereExpression(2, $date_format/*, [":values" => implode(",", $values) ]*/);
+            }
+        }
+    }
+}
+function custom_edhec_responsive_menu_off_canvas_menu_names_alter(&$menus)
+{
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if ($language == 'en') {
+        $menus = 'main-navigation-en, top-menu';
+    }
+}
+function custom_edhec_form_alter(&$form, $form_state, $form_id)
+{
+    if (isset($form['cles'])) {
+        $form['cles']['#attributes']['title'] = $form['#info']['filter-combine']['label'];
+    }
+}

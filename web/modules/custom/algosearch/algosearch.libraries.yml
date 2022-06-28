@@ -1,0 +1,29 @@
+algosearch_libs:
+  version: 1.0
+  css:
+    theme:
+      css/algosearch.css: {}
+      css/autocomplete-theme-classic.css: {}
+  js:
+    js/vue3.js: {}
+    js/algoliasearch.umd.js: {}
+    js/autocomplete-js.js: {}
+    js/common.js: {}
+    js/algosearch.js: {} 
+  dependencies:
+    - core/jquery
+
+algosearch_libs_less:
+  version: 1.0
+  css:
+    theme:
+      css/algosearch.css: {}
+      css/autocomplete-theme-classic.css: {}
+  js:
+    js/vue3.js: {}
+    js/algoliasearch.umd.js: {}
+    js/autocomplete-js.js: {}
+    js/common.js: {}
+    js/algosearch_less.js: {} 
+  dependencies:
+    - core/jquery
