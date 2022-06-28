@@ -50,7 +50,6 @@
         "drupal/ctools": "^3.7",
         "drupal/datalayer": "^1.0@beta",
         "drupal/devel": "^4.1",
-        "drupal/devel_entity_updates": "^4.0",
         "drupal/easy_breadcrumb": "^2.0",
         "drupal/editor_advanced_link": "^2.0",
         "drupal/embed": "^1.5",

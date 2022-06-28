@@ -667,7 +667,7 @@ ul.navbar-nav.mr-auto.justify-content-center.main-menu.show li:last-child a {
     display: none;    
 }
 
-.tb-megamenu-main, .tb-megamenu-main-en{
+.tb-megamenu-main, .tb-megamenu-main-en, .tb-megamenu-main-navigation-en{
     background-color: transparent;
 }
 span.dropdown-toggle.tb-megamenu-no-link, .tb-megamenu-item span.tb-megamenu-no-link, .tb-megamenu-item a {

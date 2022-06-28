@@ -102,5 +102,6 @@ jQuery(function( $ ) {
         // RGAA
         $('.slick-dots').removeAttr('role');
         $('.slick-dots li:not(.slick-active) button').attr('aria-selected', 'false');
+        $('.view-agenda summary .summary').attr('aria-hidden', 'true');
 
     });

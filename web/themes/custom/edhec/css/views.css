@@ -842,7 +842,7 @@ a.link-more:after {
 .form-control.bef-datepicker:focus {
     color: #fff;
     border-color: #000;
-    outline: 0;
+    /* outline: 0; */
     box-shadow: none;
 }
 .view-taxonomy-term-categories .view-display-id-block_2 .views-row:last-child .popular-post {
