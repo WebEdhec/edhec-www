@@ -31,6 +31,7 @@
         "drupal/block_aria_landmark_roles": "^1.4",
         "drupal/block_class": "^2.0",
         "drupal/block_field": "^1.0@RC",
+        "drupal/bootstrap5": "^1.1",
         "drupal/bootstrap_select": "^1.0",
         "drupal/calendar_link": "^2.1",
         "drupal/charts": "^5.0",

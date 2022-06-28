@@ -141,7 +141,7 @@
     {% else %}
       {# if horizontals tabs #}
     
-      <nav>
+      <div>
         <div class="nav nav-tabs justify-content-center" id="nav-tab-{{ section_id }}" role="tablist">
          {% for key, item in content.field_single_accordion if key|first != '#' %}
             <h3>
@@ -157,7 +157,7 @@
             </h3>
          {% endfor %}
         </div>
-      </nav>
+      </div>
     
       <div class="tab-content" id="nav-tabContent-{{ section_id }}">
         {% for key, item in content.field_single_accordion if key|first != '#' %}
