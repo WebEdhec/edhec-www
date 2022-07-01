@@ -413,8 +413,8 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
                 break;
             /* ------------------------- End Association page #91 ------------------------- */
 
-            /* ------------------------- Startup page #105 Canceled  ------------------------- */
-            /*case 'startup':
+            /* ------------------------- Startup page #105  ------------------------- */
+            case 'startup':
                 // Profile
                 $profile = '';
 
@@ -435,7 +435,7 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
                     'startup_lieu_incubation' => $lieuIncubation,
                 ];
 
-                break;*/
+                break;
             /* ------------------------- End Startup page #105 ------------------------- */
 
             /* ------------------------- Startup page #111 ------------------------- */
