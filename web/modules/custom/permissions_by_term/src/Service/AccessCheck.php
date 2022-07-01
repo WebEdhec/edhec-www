@@ -87,8 +87,12 @@ class AccessCheck {
     if ($user instanceof User && $user->hasPermission('bypass node access')) {
       return TRUE;
     }
-
-    $configPermissionMode = \Drupal::config('permissions_by_term.settings')->get('permission_mode');
+    
+    // @Aurone - Added    
+    $access_allowed = TRUE;
+    
+    // @Aurone - Deleted
+    /*$configPermissionMode = \Drupal::config('permissions_by_term.settings')->get('permission_mode');
     $requireAllTermsGranted = \Drupal::config('permissions_by_term.settings')->get('require_all_terms_granted');
     
     
@@ -96,7 +100,7 @@ class AccessCheck {
       $access_allowed = TRUE;
     } else {
       $access_allowed = FALSE;
-    }
+    }*/
 
     $terms = $this->database
       ->query("SELECT tid FROM {taxonomy_index} WHERE nid = :nid",
@@ -117,22 +121,23 @@ class AccessCheck {
         if (!$this->isAnyPermissionSetForTerm($term->tid, $termInfo->get('langcode')->getLangcode())) {
           continue;
         }
-        
+
         $access_allowed = $this->isAccessAllowedByDatabase($term->tid, $uid, $termInfo->get('langcode')->getLangcode());
 
-          // @Aurone - Added
-          if($access_allowed) {
-            $countAllowedTerms++;
-            break;
-          }
+        // @Aurone - Added
+        if($access_allowed) {
+          $countAllowedTerms++;
+          break;
+        }
 
-        if (!$access_allowed && $requireAllTermsGranted) {
+        // @Aurone - Deleted
+        /*if (!$access_allowed && $requireAllTermsGranted) {
           return $access_allowed;
         }
 
         if ($access_allowed && !$requireAllTermsGranted) {
           return $access_allowed;
-        }
+        }*/
       }
     }
     
