@@ -331,24 +331,31 @@ function permissions_by_term_user_form_submit(array &$form, FormStateInterface $
 
     if ($tids = $form_state->getValue('terms')) {
         // For term permissions use user preferred language.
-        $langcode = $user->getPreferredLangcode();
+        // $langcode = $user->getPreferredLangcode();
+        // @Aurone - Added
+        $languages = \Drupal::languageManager()->getLanguages();
+        
+        // All languages | @Aurone - Added
+        foreach ($languages as $language) {
+            $langcode = $language->getId();
 
-        // Second, we insert updated values.
-        foreach ($tids as $tid) {
-            $access_storage->addTermPermissionsByUserIds([$user->id()], $tid, $langcode);
-
-            // @Aurone - Added
-            $target_bundles = \Drupal::config('permissions_by_term.settings')->get('target_bundles');
-
-            // @Aurone - Added | Get child terms and add permissions for them.
-            foreach ($target_bundles as $vid) {
-                $parentTid = $tid; // the parent term id
-                $depth = null; // 1 to get only immediate children, NULL to load entire tree
-                $loadEntities = false; // True will return loaded entities rather than ids
-                $childTerms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid, $parentTid, $depth, $loadEntities);
-
-                foreach ($childTerms as $term) {
-                    $access_storage->addTermPermissionsByUserIds([$user->id()], $term->tid, $langcode);
+            // Second, we insert updated values.
+            foreach ($tids as $tid) {
+                $access_storage->addTermPermissionsByUserIds([$user->id()], $tid, $langcode);
+    
+                // @Aurone - Added
+                $target_bundles = \Drupal::config('permissions_by_term.settings')->get('target_bundles');
+    
+                // @Aurone - Added | Get child terms and add permissions for them.
+                foreach ($target_bundles as $vid) {
+                    $parentTid = $tid; // the parent term id
+                    $depth = null; // 1 to get only immediate children, NULL to load entire tree
+                    $loadEntities = false; // True will return loaded entities rather than ids
+                    $childTerms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid, $parentTid, $depth, $loadEntities);
+                    
+                    foreach ($childTerms as $term) {
+                        $access_storage->addTermPermissionsByUserIds([$user->id()], $term->tid, $langcode);
+                    }
                 }
             }
         }
