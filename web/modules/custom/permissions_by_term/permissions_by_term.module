@@ -473,13 +473,15 @@ function permissions_by_term_views_query_alter($view, $query)
         $allTypes = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
         $permittedContentTypes = [];
 
-        foreach ($rolesPermissions['redacteur'] as $permission) {
-            foreach ($allTypes as $typeKey => $typeValue) {
-                // If the permission (Drupal permissions) is for the content type
-                $strTypeKey = "'" . $typeKey . "'";
-
-                if (strpos($permission, $typeKey) !== false && !in_array($strTypeKey, $permittedContentTypes)) {
-                    $permittedContentTypes[] = $strTypeKey;
+        foreach ($rolesPermissions as $_rolePermissions) {
+            foreach ($_rolePermissions as $permission) {
+                foreach ($allTypes as $typeKey => $typeValue) {
+                    // If the permission (Drupal permissions) is for the content type
+                    $strTypeKey = "'" . $typeKey . "'";
+    
+                    if (strpos($permission, $typeKey) !== false && !in_array($strTypeKey, $permittedContentTypes)) {
+                        $permittedContentTypes[] = $strTypeKey;
+                    }
                 }
             }
         }
