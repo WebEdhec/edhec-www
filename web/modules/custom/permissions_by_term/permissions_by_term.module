@@ -504,7 +504,7 @@ function permissions_by_term_views_query_alter($view, $query)
 
         $join = \Drupal\views\Views::pluginManager('join')->createInstance('standard', $definition);
         $query->addRelationship('taxonomy_index', $join, 'node_field_data');
-        $implodedTermIds = count($permittedTermIds) ? implode(",", $permittedTermIds) : '';
+        $implodedTermIds = count($permittedTermIds) ? implode(",", $permittedTermIds) : "''";
         $sql = "taxonomy_index.tid IN ($implodedTermIds) OR (node_field_data.type IN ($allowedTypes))";
         $query->addWhereExpression(3, $sql);
 
