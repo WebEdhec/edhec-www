@@ -31,7 +31,7 @@
 /web/themes/contrib
 /vendor
 /web/profiles/contrib/
-/web/core/
+#/web/core/
 /drush/contrib/
 
 .htpasswd
