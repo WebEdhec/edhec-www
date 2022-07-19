@@ -64,7 +64,6 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
         } else {
             foreach ($breadcrumb as $key => $value) {
                 if ($value->getText() !== null) {
-                    // dump((string) $value->getText());
                     $link = (string) $value->getText();
 
                     if (!in_array($link, $links)) {
@@ -123,7 +122,7 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
                 $childrenCiblesNames = implode(', ', $_childrenCiblesNames);
             }
         }
-
+        
         // Get language
         $language = strtoupper(\Drupal::languageManager()->getDefaultLanguage()->getId());
 
@@ -212,12 +211,15 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
                 // Langue
                 $langue = '';
 
-                if (isset($node->getFields()['field_langue'])) {
-                    $langue = $node->field_langue[0]->entity->getName() ? $node->field_langue[0]->entity->getName() : '';
-                    $langue = substr($langue, 0, 2); // e.g. En from English
-                    $langue = strtoupper($langue); // e.g. EN
-                }
+                if (isset($node->getFields()['field_langue']) && !$node->field_langue->isEmpty()) {
+                    $langue = $node->field_langue->entity->getName();
 
+                    if($langue) {
+                        $langue = substr($langue, 0, 2); // e.g. En from English
+                        $langue = strtoupper($langue); // e.g. EN
+                    }
+                }
+    
                 // Date
                 $date = '';
 
@@ -326,13 +328,13 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
 
                     foreach ($node->field_departement as $departement) {
                         if ($departement) {
-                            $_departementsNames[] = trim($departement->entity->getName());
+                            $_departementsNames[] = $departement->entity ? trim($departement->entity->getName()) : '';
                         }
                     }
 
                     $departementsNames = implode(', ', $_departementsNames);
                 }
-
+                
                 // Discipline
                 $disciplinesNames = '';
 
