@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AssociationForm extends FormBase {
   
   const SAVE_PATH = 'public://association/';
+  const EXTERNAL_PATH = 'edhec_prod';
   
   /**
    * The file system.
@@ -172,13 +173,15 @@ class AssociationForm extends FormBase {
   
   public static function addNode($item, $translation, $service, $nodeStorage) {
 
+    $external_path = self::EXTERNAL_PATH;
+
     // Node / Translated Node
     $node = $service->prepareNode($item, 'association', $translation);
     
     // Body
     if(!empty($item->body_value)) {
       $text = $item->body_value;
-      $new_text = $service->ckeditorImages($text, 'association');
+      $new_text = $service->ckeditorImages($text, 'association', $external_path);
       $node->body->setValue([
         'value' => $new_text,
         'format' => 'full_html',
@@ -189,7 +192,7 @@ class AssociationForm extends FormBase {
     
     // Image
     $save_path = self::SAVE_PATH;
-    $file = $service->getFile($item->uri, $item->filename, $save_path);
+    $file = $service->getFile($item->uri, $item->filename, $save_path, $external_path);
     
     // Get Categories
     $tids = self::getCategories($item, $service);

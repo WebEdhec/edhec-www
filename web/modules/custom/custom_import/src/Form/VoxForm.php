@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class VoxForm extends FormBase {
   
   const SAVE_PATH = 'public://actualites-edhec-vox/';
+  const EXTERNAL_PATH = 'edhec_prod';
   
   /**
    * The entity type manager.
@@ -200,6 +201,8 @@ class VoxForm extends FormBase {
   
   public static function addNode($item, $translation, $service, $nodeStorage, $termStorage) {
     
+    $external_path = self::EXTERNAL_PATH;
+    
     // Node / Translated Node
     $node = $service->prepareNode($item, 'actualite_edhecvox', $translation);
    
@@ -211,7 +214,7 @@ class VoxForm extends FormBase {
         'format' => 'basic_html',
       ]);
       $text = $item->body_value;
-      $new_text = $service->ckeditorImages($text, 'actualite_edhecvox');
+      $new_text = $service->ckeditorImages($text, 'actualite_edhecvox', $external_path);
       $node->body->setValue([
         'value' => $new_text,
         'format' => 'full_html',
@@ -223,7 +226,7 @@ class VoxForm extends FormBase {
     
     // Image
     $save_path = self::SAVE_PATH;
-    $media = $service->getMedia($item->uri, $item->filename, $save_path, 'image');
+    $media = $service->getMedia($item->uri, $item->filename, $save_path, 'image', $external_path);
     if($media) {
       $node->field_image->setValue($media->id());
     } else {
@@ -233,7 +236,7 @@ class VoxForm extends FormBase {
     // Auteur
     if(!empty($item->field_author_value)) {
       $text = $item->field_author_value;
-      $new_text = $service->ckeditorImages($text, 'actualite_edhecvox');
+      $new_text = $service->ckeditorImages($text, 'actualite_edhecvox', $external_path);
       $node->field_auteur_old_->setValue([
         'value' => $new_text,
         'format' => 'full_html',

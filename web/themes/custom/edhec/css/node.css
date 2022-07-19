@@ -407,7 +407,7 @@ body .hero.hero-interne .field--type-text-long>*,
     width: 100%;
     max-width: 1310px;
 }
-#ancres-container .slick-slide li.ancre-active {
+#ancres-container .slick-slide.ancre-active {
     border-bottom: 5px solid #A52336;
 }
 #ancres-container .slick-slide {

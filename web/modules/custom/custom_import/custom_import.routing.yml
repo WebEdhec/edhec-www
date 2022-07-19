@@ -62,6 +62,30 @@ custom_import.theses_phd:
   requirements:
     _role: 'administrator'
 
+custom_import.news_room_actu_form:
+  path: '/admin/import/newsroom-actu'
+  defaults:
+    _title: 'Import: Newsroom Actualités'
+    _form: '\Drupal\custom_import\Form\NewsRoomActuForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.news_room_events_form:
+  path: '/admin/import/newsroom-events'
+  defaults:
+    _title: 'Import: Newsroom Events'
+    _form: '\Drupal\custom_import\Form\NewsRoomEventsForm'
+  requirements:
+    _role: 'administrator'
+
+custom_import.delete_medias:
+  path: '/admin/import/delete-medias'
+  defaults:
+    _title: 'Delete medias'
+    _form: '\Drupal\custom_import\Form\DeleteMediasForm'
+  requirements:
+    _role: 'administrator'
+
 custom_import.terms_form:
   path: '/admin/import/terms'
   defaults:

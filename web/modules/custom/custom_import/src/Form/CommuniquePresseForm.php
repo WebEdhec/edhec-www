@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommuniquePresseForm extends FormBase {
 
   const SAVE_PATH = 'public://communiques-presse/';
+  const EXTERNAL_PATH = 'edhec_prod';
 
   /**
    * The entity type manager.
@@ -169,13 +170,15 @@ class CommuniquePresseForm extends FormBase {
   
   public static function addNode($item, $translation, $service, $nodeStorage) {
     
+    $external_path = self::EXTERNAL_PATH;
+    
     // Node / Translated Node
     $node = $service->prepareNode($item, 'communique_de_presse', $translation);
     
     // Body
     if(!empty($item->body_value)) {
       $text = $item->body_value;
-      $new_text = $service->ckeditorImages($text, 'communique_de_presse');
+      $new_text = $service->ckeditorImages($text, 'communique_de_presse', $external_path);
       $node->field_chapo_presse->setValue([
         'value' => $new_text,
         'format' => 'basic_html',
@@ -186,7 +189,7 @@ class CommuniquePresseForm extends FormBase {
     
     // PDF
     $save_path = self::SAVE_PATH;
-    $file = $service->getFile($item->uri, $item->filename, $save_path);
+    $file = $service->getFile($item->uri, $item->filename, $save_path, $external_path);
     
     if($file) {
       $node->field_pdf->setValue($file->id());

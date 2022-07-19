@@ -148,10 +148,10 @@
                 <button class="nav-link {% if key == 0 %} active {% endif %}" 
                     id="nav-{{ key + 1 }}-tab-{{ section_id }}" 
                     data-bs-toggle="pill" 
-                    data-bs-target="#nav-{{ key + 1 }}-{{ section_id }}" 
+                    data-bs-target="#ancre-{{ item['#paragraph'].id.value }}" 
                     type="button" role="tab" 
                     aria-controls="nav-{{ key + 1 }}-{{ section_id }}" 
-                    aria-selected="true">
+                    aria-selected="true" ancre="#nav-{{ key + 1 }}-{{ section_id }}">
                     {{ item['#paragraph'].field_title_accordion.value }}
                 </button>
             </h3>
@@ -162,9 +162,9 @@
       <div class="tab-content" id="nav-tabContent-{{ section_id }}">
         {% for key, item in content.field_single_accordion if key|first != '#' %}
           <div class="tab-pane fade show {% if key == 0 %} active {% endif %}" 
-               id="nav-{{ key + 1 }}-{{ section_id }}" 
+               id="ancre-{{ item['#paragraph'].id.value }}" 
                role="tabpanel" 
-               aria-labelledby="nav-{{ key + 1 }}-tab-{{ section_id }}">
+               aria-labelledby="nav-{{ key + 1 }}-tab-{{ section_id }}" ancre="nav-{{ key + 1 }}-{{ section_id }}">
               {{ item }}
           </div>
         {% endfor %}

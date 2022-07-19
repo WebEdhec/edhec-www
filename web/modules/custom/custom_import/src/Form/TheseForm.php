@@ -12,7 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TheseForm extends FormBase {
   
-  const SAVE_PATH = 'public://actualites-edhec-vox/';
+  const SAVE_PATH = 'public://theses/';
+  const EXTERNAL_PATH = 'edhec_prod';
   
   /**
    * The entity type manager.
@@ -201,13 +202,15 @@ class TheseForm extends FormBase {
   
   public static function addNode($item, $translation, $service, $nodeStorage, $termStorage) {
     
+    $external_path = self::EXTERNAL_PATH;
+    
     // Node / Translated Node
     $node = $service->prepareNode($item, 'these_phd', $translation);
     
     // Body
     if(!empty($item->body_value)) {
       $text = $item->body_value;
-      $new_text = $service->ckeditorImages($text, 'these_phd');
+      $new_text = $service->ckeditorImages($text, 'these_phd', $external_path);
       $node->field_abstract2->setValue([
         'value' => $new_text,
         'format' => 'full_html',
@@ -242,7 +245,7 @@ class TheseForm extends FormBase {
     // Documents
     $document = self::getDocument($item);
     $save_path = self::SAVE_PATH;
-    $file = $service->getFile($document->uri, $document->filename, $save_path, $options = [], $external_path = 'edhec_prod');
+    $file = $service->getFile($document->uri, $document->filename, $save_path, $external_path);
     if($file) {
       $node->field_pdf->setValue($file->id());
     } else {
@@ -252,7 +255,7 @@ class TheseForm extends FormBase {
     // Comité
     if(!empty($item->field_complement_d_information_value)) {
       $text = $item->field_complement_d_information_value;
-      $new_text = $service->ckeditorImages($text, 'these_phd');
+      $new_text = $service->ckeditorImages($text, 'these_phd', $external_path);
       $node->field_comite_de_these->setValue([
         'value' => $new_text,
         'format' => 'basic_html',

@@ -41,25 +41,31 @@ jQuery(function( $ ) {
 
     function openTabOnLinkClick () {    
             var $currentUrl = window.location.href;
-            if ($currentUrl.indexOf("#nav") >= 0) {
-                var $destination = $currentUrl.substring($currentUrl.indexOf("#"), $currentUrl.length);
-                var $tab_id = $destination.substring($destination.indexOf("nav"), $destination.length);
+                if ($currentUrl.indexOf("#") >= 0) {
+                    var $destination = $currentUrl.substring($currentUrl.indexOf("#"), $currentUrl.length);
+                    // console.log($destination);
+                    var $tab_id = $destination.substring($destination.indexOf("#"), $destination.length);
+                    console.log($tab_id);
+                $('.nav-link').each(function() {
+                    $navLink = $(this);
+                    if ($navLink.attr('data-bs-target') == $tab_id) {
+                        $navLink.click();
+                        $('.nav-link').each(function() {
+                            $(this).removeClass('active');
+                        })
+                    $navLink.addClass('active');
+                    }
+                })
+                $('.tab-pane').each(function() {
+                    var $tabPane = $(this);
+                    if ('#' + $tabPane.attr('id') == $tab_id) {
+                        $('.tab-pane').each(function() {
+                            $(this).removeClass('active');
+                        })
+                        $tabPane.addClass('show active');
+                    }
+                })
             }
-            $('.nav-link').each(function() {
-                $navLink = $(this);
-                if ($navLink.prop('id') == $tab_id) {
-                    $navLink.click();
-                }
-            })
-            $('.tab-pane').each(function() {
-                var $tabPane = $(this);
-                if ($tabPane.attr('aria-labelledby') == $tab_id) {
-                    $('.tab-pane').each(function() {
-                        $(this).removeClass('active');
-                    })
-                    $tabPane.addClass('show active');
-                }
-            })
     }
 
     openTabOnLinkClick();

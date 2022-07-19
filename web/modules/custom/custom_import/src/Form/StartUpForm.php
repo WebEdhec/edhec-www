@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class StartUpForm extends FormBase {
   
   const SAVE_PATH = 'public://start-up/';
+  const EXTERNAL_PATH = 'entrepreneur';
   
   /**
    * The entity type manager.
@@ -226,12 +227,14 @@ class StartUpForm extends FormBase {
   
   public static function addNode($item, $translation, $service, $nodeStorage) {
     
+    $external_path = self::EXTERNAL_PATH;
+    
     // Node / Translated Node
-    $node = $service->prepareNode($item, 'startup', $translation);
+    $node = $service->prepareNode($item, 'startup', $translation, 'eyeedhec');
     
     // Field LOGO
     $save_path = self::SAVE_PATH;
-    $file = $service->getFile($item->uri, $item->filename, $save_path, [], 'entrepreneur');
+    $file = $service->getFile($item->uri, $item->filename, $save_path, $external_path);
     
     if($file) {
       $node->field_logo->setValue([
@@ -244,7 +247,7 @@ class StartUpForm extends FormBase {
     }
     
     // Field PHOTO
-    $file = $service->getFile($item->file_managed_logo_uri, $item->file_managed_logo_filename, $save_path, [], 'entrepreneur');
+    $file = $service->getFile($item->file_managed_logo_uri, $item->file_managed_logo_filename, $save_path, $external_path);
     
     if($file) {
       $node->field_photo->setValue([
@@ -322,7 +325,7 @@ class StartUpForm extends FormBase {
     // Bloc Incubateur
     if(!empty($item->field_bloc_incubateur_value)) {
       $text = $item->field_bloc_incubateur_value;
-      $new_text = $service->ckeditorImages($text, 'startup');
+      $new_text = $service->ckeditorImages($text, 'startup', $external_path);
       $node->field_chapo->setValue([
         'value' => $new_text,
         'format' => 'basic_html',
@@ -351,7 +354,7 @@ class StartUpForm extends FormBase {
     // Description
     if(!empty($item->body_value)) {
       $text = $item->body_value;
-      $new_text = $service->ckeditorImages($text, 'startup');
+      $new_text = $service->ckeditorImages($text, 'startup', $external_path);
       $node->body->setValue([
         'value' => $new_text,
         'format' => 'full_html',

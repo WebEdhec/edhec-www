@@ -54,6 +54,27 @@ custom_import.theses_phd:
   route_name: custom_import.theses_phd
   weight: 8
 
+custom_import.news_room_actu_form:
+  title: 'Import: Newsroom Actualites'
+  description: 'Newsroom Actualites'
+  parent: custom_import.homepage
+  route_name: custom_import.news_room_actu_form
+  weight: 9
+
+custom_import.news_room_events_form:
+  title: 'Import: Newsroom Events'
+  description: 'Newsroom Events'
+  parent: custom_import.homepage
+  route_name: custom_import.news_room_events_form
+  weight: 10
+
+custom_import.delete_medias:
+  title: 'Import: Delete medias'
+  description: 'Delete medias'
+  parent: custom_import.homepage
+  route_name: custom_import.delete_medias
+  weight: 11
+
 custom_import.terms_form:
   title: 'Import: Terms'
   description: 'Terms'

@@ -38,6 +38,21 @@ custom_import.theses_phd:
   route_name: custom_import.theses_phd
   base_route: custom_import.homepage
 
+custom_import.news_room_actu_form:
+  title: 'Import: Newsroom Actualites'
+  route_name: custom_import.news_room_actu_form
+  base_route: custom_import.homepage
+
+custom_import.news_room_events_form:
+  title: 'Import: Newsroom Events'
+  route_name: custom_import.news_room_events_form
+  base_route: custom_import.homepage
+
+custom_import.delete_medias:
+  title: 'Import: Delete medias'
+  route_name: custom_import.delete_medias
+  base_route: custom_import.homepage
+
 custom_import.terms_form:
   title: 'Import: Terms'
   route_name: custom_import.terms_form

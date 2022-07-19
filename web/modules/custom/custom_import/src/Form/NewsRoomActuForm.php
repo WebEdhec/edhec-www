@@ -9,10 +9,10 @@ use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\Unicode;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ActuForm extends FormBase {
+class NewsRoomActuForm extends FormBase {
   
   const SAVE_PATH = 'public://actualites/';
-  const EXTERNAL_PATH = 'edhec_prod';
+  const EXTERNAL_PATH = 'newsroom';
   
   /**
    * The entity type manager.
@@ -44,6 +44,7 @@ class ActuForm extends FormBase {
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->nodeStorage = $instance->entityTypeManager->getStorage('node');
     $instance->fileSystem = $container->get('file_system');
+    $instance->database = $container->get('database');
     return $instance;
   }
   
@@ -51,7 +52,7 @@ class ActuForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'actu_form';
+    return 'news_room_actu_form';
   }
   
   /**
@@ -62,7 +63,7 @@ class ActuForm extends FormBase {
     
     $form['import'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Importer les Actualités'),
+      '#value' => $this->t('Newsroom actualités'),
     ];
     
     $form['translations'] = [
@@ -71,13 +72,31 @@ class ActuForm extends FormBase {
       '#submit' => ['::translationSubmit'],
     ];
     
-    // $form['delete'] = [
-      // '#type' => 'submit',
-      // '#value' => $this->t('Delete'),
-      // '#submit' => ['::deleteSubmit'],
-    // ];
-    
+    $form['delete_news'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Delete News newsroom'),
+      '#submit' => ['::deleteNewsSubmit'],
+    ];
+      
     return $form;
+  }
+  
+  public function deleteNewsSubmit(array &$form, FormStateInterface $form_state) {
+    $query = $this->database->select('node_field_data', 'node');
+    $query->fields('node', ['nid']);
+    $query->condition('node.type', 'actualite');
+    $query->join('node__field_old_id', 'field_old_id', "field_old_id.entity_id = node.nid AND field_old_id.bundle = 'actualite'");
+    $query->condition('field_old_id.field_old_id_value', '%' . $this->database->escapeLike('newsroom') . '%', 'LIKE');
+    $results = $query->execute();
+    
+    $nids = [];
+    foreach($results as $result) {
+      $nids[] = $result->nid;
+    }
+    
+    $nodes = $this->nodeStorage->loadMultiple($nids);
+    $this->nodeStorage->delete($nodes);
+    $this->messenger()->addStatus($this->t('Terminé'));
   }
   
   /**
@@ -87,18 +106,7 @@ class ActuForm extends FormBase {
     
   }
   
-  public function deleteSubmit(array &$form, FormStateInterface $form_state) {
-    $nodes = $this->nodeStorage
-      ->loadByProperties([
-        'type' => 'actualite'
-      ]);
-    
-    $this->nodeStorage
-      ->delete($nodes);
-  }
-  
   public function getQuery($translation) {
-    
     // Prepare Directory
     $folder = self::SAVE_PATH;
     $this->fileSystem->prepareDirectory($folder, FileSystemInterface::CREATE_DIRECTORY);
@@ -106,29 +114,47 @@ class ActuForm extends FormBase {
     // Older Content type : communiqu_de_presse
     // Newest Content Type : communique_de_presse
     // tx_emgoodpractices_domain_model_goodpractice
-    $connection = Database::getConnection('default', 'edhec_prod');
+    $connection = Database::getConnection('default', 'newsroomedhec');
     
     $query = $connection->select('node', 'node');
     $query->fields('node', ['nid', 'tnid', 'title', 'status', 'language', 'created', 'changed']);
-    $query->condition('node.type', 'actualit_s');
+    $query->condition('node.type', 'news');
     
     // Body
-    $query->leftJoin('field_data_body', 'body', "body.entity_id = node.nid AND body.entity_type = 'node' AND body.bundle = 'actualit_s'");
+    $query->leftJoin('field_data_body', 'body', "body.entity_id = node.nid AND body.entity_type = 'node' AND body.bundle = 'news'");
     $query->fields('body', ['body_value', 'body_summary']);
     
+    // Sous Titre
+    $query->leftJoin('field_data_field_sous_titre', 'field_sous_titre', "field_sous_titre.entity_id = node.nid AND field_sous_titre.bundle = 'news' AND field_sous_titre.entity_type = 'node'");
+    $query->fields('field_sous_titre', ['field_sous_titre_value']);
+    
     // Image
-    $query->leftJoin('field_data_field_image', 'field_image', "field_image.entity_id = node.nid AND field_image.entity_type = 'node' AND field_image.bundle = 'actualit_s'");
-    $query->leftJoin('file_managed', 'file_managed', "file_managed.fid = field_image.field_image_fid");
-    $query->fields('file_managed', ['filename', 'uri', 'filemime', 'status', 'type', 'timestamp']);
+    $query->leftJoin('field_data_field_image', 'field_image', "field_image.entity_id = node.nid AND field_image.bundle = 'news' AND field_image.entity_type = 'node'");
+    $query->leftJoin('file_managed', 'file_managed', 'file_managed.fid = field_image.field_image_fid');
+    $query->fields('file_managed', ['filename', 'uri']);
     
-    // Emetteur
-    $query->leftJoin('field_data_field_emetteur', 'field_emetteur', "field_emetteur.entity_id = node.nid AND field_emetteur.entity_type = 'node' AND field_emetteur.bundle = 'actualit_s'");
-    $query->fields('field_emetteur', ['field_emetteur_target_id']);
+    // Sites
+    $query->leftJoin('field_data_field_site_edhec', 'field_site_edhec', "field_site_edhec.entity_id = node.nid AND field_site_edhec.bundle = 'news' AND field_site_edhec.entity_type = 'node'");
+    $query->leftJoin('field_data_field_site_edhec_to', 'field_site_edhec_to', "field_site_edhec_to.entity_id = node.nid AND field_site_edhec_to.bundle = 'news' AND field_site_edhec_to.entity_type = 'node'");
+    $query->fields('field_site_edhec', ['field_site_edhec_tid']);
     
-    // ID WS
-    $query->leftJoin('field_data_field_id_ws', 'field_id_ws', "field_id_ws.entity_id = node.nid AND field_id_ws.entity_type = 'node' AND field_id_ws.bundle = 'actualit_s'");
-    $query->fields('field_id_ws', ['field_id_ws_value']);
     
+    $db_or = $query->orConditionGroup();
+    $db_or->isNull('field_site_edhec.field_site_edhec_tid');
+    $db_or->condition('field_site_edhec.field_site_edhec_tid', 11, '!=');
+    $query->condition($db_or);
+    
+    $sub_query_2 = $connection->select('field_data_field_site_edhec_to', 'field_site_edhec_to');
+    $sub_query_2->fields('field_site_edhec_to', ['entity_id']);
+    $sub_query_2->condition('field_site_edhec_to.entity_type', 'node');
+    $sub_query_2->condition('field_site_edhec_to.bundle', 'news');
+    $sub_query_2->where('field_site_edhec_to.entity_id = node.nid');
+    $sub_query_2->condition('field_site_edhec_to.field_site_edhec_to_tid', 11);
+    
+    $query->condition('node.nid', $sub_query_2, 'NOT IN');
+    
+    $query->groupBy('node.nid');
+
     if($translation) {
       $query->where('node.nid != node.tnid');
       $query->condition('node.tnid', '0', '!=');
@@ -155,16 +181,16 @@ class ActuForm extends FormBase {
     
     foreach($chunk as $ch) {
       $operations[] = [
-        'Drupal\custom_import\Form\ActuForm::import',
+        'Drupal\custom_import\Form\NewsRoomActuForm::import',
         [$ch, $translation],
       ];
     }
     
     // Batch
     $batch = [
-      'title' => $this->t('Importation des Actualités...'),
+      'title' => $this->t('Importation des NewsRoom Actualités...'),
       'operations' => $operations,
-      'finished' => 'Drupal\custom_import\ActuForm::finished',
+      'finished' => 'Drupal\custom_import\NewsRoomActuForm::finished',
       'init_message' => 'Import des Actualités',
       'progress_message' => $this->t('Processed @current out of @total.'),
       'error_message' => $this->t('Batch has encountered an error.'),
@@ -180,19 +206,18 @@ class ActuForm extends FormBase {
     // Translation
     $translation = TRUE;
     
-    // Batch
+    // Get Batch
     $this->getBatch($translation);
   }
-
+  
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    
-    // Node original translation
+    // Translation
     $translation = FALSE;
     
-    // Query
+    // Get Batch
     $this->getBatch($translation);
   }
   
@@ -207,12 +232,32 @@ class ActuForm extends FormBase {
     }
   }
   
+  public static function checkEduNewsroom($item, $nodeStorage) {
+    $nids = $nodeStorage
+      ->getQuery()
+      ->condition('type', 'actualite')
+      ->condition('field_od_id_ws', $item->nid)
+      ->count()
+      ->execute();
+
+    return $nids ? TRUE : FALSE;
+  }
+  
   public static function addNode($item, $translation, $service, $nodeStorage, $termStorage) {
+    
+    // Check if event already importer from edhec edu
+    $check_edu = self::checkEduNewsroom($item, $nodeStorage);
+    if($check_edu) {
+      return;
+    }
+    
+    $item->nid_newsroom = $item->nid;
+    $item->nid = $item->nid . '-newsroom';
     
     $external_path = self::EXTERNAL_PATH;
     
     // Node / Translated Node
-    $node = $service->prepareNode($item, 'actualite', $translation);
+    $node = $service->prepareNode($item, 'actualite', $translation, 'newsroomedhec');
     
     // Body
     if(!empty($item->body_value)) {
@@ -242,30 +287,27 @@ class ActuForm extends FormBase {
       $node->field_header->setValue(NULL);
     }
     
-    // Emetteur
-    $emetteur = $service->getTerm($item->field_emetteur_target_id, 'destination');
-    $node->field_emetteur->setValue($emetteur);
-    
-    // Cibles
+     // Cibles
     $cibles = self::getCibles($item, $service, $termStorage);
     $node->field_cible->setValue($cibles);
     
-    // OLD ID WS
-    $node->field_od_id_ws->setValue($item->field_id_ws_value);
+    // Emetteur
+    $emetteur = $service->getTerm($item->field_site_edhec_tid, 'destination', TRUE);
+    $node->field_emetteur->setValue($emetteur);
 
     $node->setChangedTime($item->changed);
     $node->save();
   }
   
   public static function getCibles($item, $service, $termStorage) {
-    $connection = Database::getConnection('default', 'edhec_prod');
+    $connection = Database::getConnection('default', 'newsroomedhec');
     
     // Cibles
     $query = $connection->select('field_data_field_cible', 'field_cible');
     $query->fields('field_cible', ['field_cible_tid']);
     $query->condition('field_cible.entity_type', 'node');
-    $query->condition('field_cible.entity_id', $item->nid);
-    $query->condition('field_cible.bundle', 'actualit_s');
+    $query->condition('field_cible.entity_id', $item->nid_newsroom);
+    $query->condition('field_cible.bundle', 'news');
     $results = $query->execute();
     
     $cibles = [];
@@ -275,23 +317,23 @@ class ActuForm extends FormBase {
     $cibles = array_unique($cibles);
     
     // Destination
-    $query = $connection->select('field_data_field_destination', 'field_destination');
-    $query->fields('field_destination', ['field_destination_tid']);
-    $query->condition('field_destination.entity_id', $item->nid);
-    $query->condition('field_destination.entity_type', 'node');
-    $query->condition('field_destination.bundle', 'actualit_s');
+    $query = $connection->select('field_data_field_site_edhec_to', 'field_site_edhec_to');
+    $query->fields('field_site_edhec_to', ['field_site_edhec_to_tid']);
+    $query->condition('field_site_edhec_to.entity_id', $item->nid_newsroom);
+    $query->condition('field_site_edhec_to.entity_type', 'node');
+    $query->condition('field_site_edhec_to.bundle', 'news');
     $results = $query->execute();
     
     $destinations = [];
     foreach($results as $result) {
-      $destinations[] = $result->field_destination_tid;
+      $destinations[] = $result->field_site_edhec_to_tid;
     }
     $destination = array_unique($destinations);
- 
+
     $old_tids = array_merge($cibles, $destinations);
 
     if($old_tids) {
-      $terms = $service->getTerm($old_tids, 'cible');
+      $terms = $service->getTerm($old_tids, 'cible', TRUE);
       return $terms;
     }
     return NULL;
@@ -300,4 +342,5 @@ class ActuForm extends FormBase {
   public static function finished($success, $results, $operations) {
     \Drupal::messenger()->addStatus('Terminé');
   }
+  
 }

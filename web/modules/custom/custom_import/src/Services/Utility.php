@@ -58,6 +58,7 @@ class Utility {
   
   const EDHEC_EDU_PUBLIC_PATH = 'https://www.edhec.edu/sites/www.edhec-portail.pprod.net/files/';
   const EDHEC_ENTREPENEUR_PUBLIC_PATH = 'https://entrepreneurs.edhec.edu/sites/entrepreneurs/files/';
+  const EDHEC_NEWSROOM_PUBLIC_PATH = 'https://newsroom.edhec.com/sites/newsroom.edhec.com/files/';
   const SAVE_PATH = 'public://communiques-presse/';
   
   /**
@@ -122,11 +123,12 @@ class Utility {
   /**
    * Save trace
    */
-  public function addFileTrace($uri, $fid) {
+  public function addFileTrace($uri, $fid, $external_path) {
     $this->database->insert('file_import')
       ->fields([
         'fid' => $fid,
         'old_id' => $uri,
+        'origin' => $external_path,
       ])
       ->execute();
   }
@@ -134,10 +136,11 @@ class Utility {
   /**
    * Check File is exist
    */
-  public function checkFile($uri) {
+  public function checkFile($uri, $external_path) {
     $query = $this->database->select('file_import');
     $query->fields('file_import', ['fid']);
     $query->condition('old_id', $uri);
+    $query->condition('origin', $external_path);
 
     $fid = $query->execute()->fetchField();
     if($fid) {
@@ -160,7 +163,7 @@ class Utility {
   /**
    * Retrieve media
    */
-  public function getMedia($uri, $filename, $save_path, $type) {
+  public function getMedia($uri, $filename, $save_path, $type, $external_path) {
     
     $media_field = NULL;
     $media = NULL;
@@ -171,13 +174,14 @@ class Utility {
         break;
     }
     
-    $file = $this->getFile($uri, $filename, $save_path);
+    $file = $this->getFile($uri, $filename, $save_path, $external_path);
 
     if($file) {
       $checkMedia = $this->mediaStorage
         ->loadByProperties([
           'bundle' => $type,
           'field_old_id' => $uri,
+          'field_origin' => $external_path,
         ]);
       
       if($checkMedia) {
@@ -189,6 +193,7 @@ class Utility {
       
       $media->field_old_id->setValue($uri);
       $media->get($media_field)->setValue($file->id());
+      $media->field_origin->setValue($external_path);
       $media->save();
     }
     
@@ -198,13 +203,13 @@ class Utility {
   /**
    * Retrieve file from HTTP REQUEST
    */
-  public function getFile($uri, $filename, $save_path, $options = [], $external_path = 'edhec_prod') {
+  public function getFile($uri, $filename, $save_path, $external_path) {
     $original_uri = $uri;
     
     $file = NULL;
     
     if(!empty($uri)) {
-      $checkFile = $this->checkFile($uri);
+      $checkFile = $this->checkFile($uri, $external_path);
       if($checkFile) {
         $file = $checkFile;
       } else {
@@ -216,6 +221,9 @@ class Utility {
         }
         if($external_path == 'entrepreneur') {
           $filepath = self::EDHEC_ENTREPENEUR_PUBLIC_PATH . $path;
+        }
+        if($external_path == 'newsroom') {
+          $filepath = self::EDHEC_NEWSROOM_PUBLIC_PATH . $path;
         }
         
         $data = file_get_contents($filepath);
@@ -230,7 +238,7 @@ class Utility {
         if($data) {
           $folder = "{$save_path}{$filename}";
           $file = $this->fileRepository->writeData($data, $folder, FileSystemInterface::EXISTS_RENAME);
-          $this->addFileTrace($original_uri, $file->id());
+          $this->addFileTrace($original_uri, $file->id(), $external_path);
         }
       }
     }
@@ -241,7 +249,7 @@ class Utility {
   /**
    * Prepare Node
    */
-  public function prepareNode($item, $node_type, $translation) {
+  public function prepareNode($item, $node_type, $translation, $from = 'edhec_prod') {
     // Node original
     if(!$translation) {
       $checkNode = $this->checkNode($item, $node_type);
@@ -293,7 +301,7 @@ class Utility {
       $node->langcode->setValue('en');
     }
     
-    $alias = $this->getAlias($item);
+    $alias = $this->getAlias($item, $from);
     
     if($alias) {
       $node->path->setValue([
@@ -307,14 +315,21 @@ class Utility {
     return $node;
   }
   
-  public function getAlias($item) {
+  public function getAlias($item, $from = 'edhec_prod') {
+    
+    if($from == 'newsroomedhec') {
+      $nid = $item->nid_newsroom;
+    } else {
+      $nid = $item->nid;
+    }
+    
     // url_alias
-    $connection = \Drupal\Core\Database\Database::getConnection('default', 'edhec_prod');
+    $connection = \Drupal\Core\Database\Database::getConnection('default', $from);
     
     $query = $connection->select('url_alias', 'alias');
     $query->fields('alias', ['alias']);
     $query->condition('alias.language', $item->language);
-    $query->condition('alias.source', "node/{$item->nid}");
+    $query->condition('alias.source', "node/{$nid}");
     $query->orderBy('pid', 'DESC');
     $query->range(0, 1);
     $alias = $query->execute()->fetchField();
@@ -329,7 +344,10 @@ class Utility {
   /**
    * Retrieve Term
    */
-  public function getTerm($items, $vocabulary) {
+  public function getTerm($items, $vocabulary, $newsroom = FALSE) {
+    
+    $field = (!$newsroom) ? 'field_old_tid' : 'field_old_tid_newsroom';
+    
     $tids = [];
     if(!empty($items)) {
       $query = $this->termStorage
@@ -338,10 +356,10 @@ class Utility {
       
       if(is_array($items)) {
         // Array
-        $query->condition('field_old_tid', $items, 'IN');
+        $query->condition($field, $items, 'IN');
       } else {
         // Single Item
-        $query->condition('field_old_tid', $items);
+        $query->condition($field, $items);
       }
       $tids = $query->execute();
     }
@@ -372,6 +390,7 @@ class Utility {
   
   public function getOriginalNode($item, $node_type) {
     $tnid = $item->tnid;
+    
     $checkNode = $this->nodeStorage
       ->loadByProperties([
         'type' => $node_type,
@@ -412,14 +431,8 @@ class Utility {
     return $str;
   }
   
-  // Cherche dans le text d'un champ RTE pour remplacer les balises Img et Lien par des Medias
-  public function ckeditor($text) {
-    $new_text = $this->ckeditorImages($text);
-    return $new_text;
-  }
-  
   // Cherche dans le text d'un champ RTE pour remplacer les balises Img et Lien par des Fichiers
-  public function ckeditorImages($text, $bundle) {
+  public function ckeditorImages($text, $bundle, $external_path) {
     
     $folder = 'public://ckeditor-inlines';
     $this->fileSystem->prepareDirectory($folder, FileSystemInterface::CREATE_DIRECTORY);
@@ -434,14 +447,14 @@ class Utility {
         $src = $element->src;
 
         // Entrepreneur / Corpo
-        $this->replaceFileCkeditor($element, 'img', $folder, $bundle);
+        $this->replaceFileCkeditor($element, 'img', $folder, $bundle, $external_path);
       }
       
       foreach($html->find('a') as $element) {
         $src = $element->href;
         
         // Entrepreneur / Corpo
-        $this->replaceFileCkeditor($element, 'a', $folder, $bundle);
+        $this->replaceFileCkeditor($element, 'a', $folder, $bundle, $external_path);
       }
       
       return $html;
@@ -450,7 +463,7 @@ class Utility {
     return $text;
   }
   
-  public function replaceFileCkeditor($element, $type, $folder, $bundle) {
+  public function replaceFileCkeditor($element, $type, $folder, $bundle, $external_path) {
     $file = NULL;
     $external_uri = NULL;
     
@@ -469,20 +482,77 @@ class Utility {
     }
     
     if(strpos($src, '/sites/entrepreneurs/files/') !== FALSE
-      || strpos($src, '/sites/www.edhec-portail.pprod.net/files/') !== FALSE) {
+      || strpos($src, '/sites/www.edhec-portail.pprod.net/files/') !== FALSE
+      || strpos($src, '/sites/newsroom.edhec.com/files/') !== FALSE
+      || strpos($src, '/sites/executive_edhec/files/') !== FALSE
+      || strpos($src, '/sites/careers/files/') !== FALSE
+      || strpos($src, '/sites/ge/files/') !== FALSE
+      || strpos($src, '/sites/giving/files/') !== FALSE
+      || strpos($src, '/sites/global_MBA/files/') !== FALSE
+      || strpos($src, '/sites/graduate_programmes/files/') !== FALSE
+      || strpos($src, '/sites/master/files/') !== FALSE
+      || strpos($src, '/sites/risk/files/') !== FALSE) {
       $old_id = 'ckeditor:/' . $src;
-      $checkFile = $this->checkFile($old_id);
+      $checkFile = $this->checkFile($old_id, $external_path);
       
       if($checkFile) {
         $file = $checkFile;
       } else {
         // Check if external Uri
         if(substr($src, 0, 4) != 'http') {
+          
+          // Edhec Entrepreneurs
           if(strpos($src, '/sites/entrepreneurs/files/') !== FALSE) {
             $external_uri = "https://entrepreneurs.edhec.edu{$src}";
           }
+          
+          // Edhec Portail
           if(strpos($src, '/sites/www.edhec-portail.pprod.net/files/') !== FALSE) {
             $external_uri = "https://www.edhec.edu{$src}";
+          }
+          // Newsroom
+          if(strpos($src, '/sites/newsroom.edhec.com/files/') !== FALSE) {
+            $external_uri = "https://newsroom.edhec.com{$src}";
+          }
+          
+          // Executive Edhec
+          if(strpos($src, '/sites/executive_edhec/files/') !== FALSE) {
+            $external_uri = "https://executive.edhec.edu{$src}";
+          }
+          
+          // Edhec Careers
+          if(strpos($src, '/sites/careers/files/') !== FALSE) {
+            $external_uri = "https://careers.edhec.edu{$src}";
+          }
+          
+          // Edhec GE
+          if(strpos($src, '/sites/ge/files/') !== FALSE) {
+            $external_uri = "https://ge.edhec.edu{$src}";
+          }
+          
+          // Edhec Giving
+          if(strpos($src, '/sites/giving/files/') !== FALSE) {
+            $external_uri = "https://giving.edhec.edu{$src}";
+          }
+          
+          // Global MBA
+          if(strpos($src, '/sites/global_MBA/files/') !== FALSE) {
+            $external_uri = "https://mba.edhec.edu{$src}";
+          }
+          
+          // Graduate Programmes
+          if(strpos($src, '/sites/graduate_programmes/files/') !== FALSE) {
+            $external_uri = "https://www.graduate-programmes.com{$src}";
+          }
+          
+          // Edhec Master
+          if(strpos($src, '/sites/master/files/') !== FALSE) {
+            $external_uri = "https://master.edhec.edu{$src}";
+          }
+
+          // Edhec Risk
+          if(strpos($src, '/sites/risk/files/') !== FALSE) {
+            $external_uri = "https://risk.edhec.edu{$src}";
           }
         } else {
           $external_uri = $src;
@@ -495,7 +565,7 @@ class Utility {
             $filename = basename($external_uri);
             $filepath = "{$folder}/{$filename}";
             $file = $this->fileRepository->writeData($data, $filepath, FileSystemInterface::EXISTS_RENAME);
-            $this->addFileTrace($old_id, $file->id());
+            $this->addFileTrace($old_id, $file->id(), $external_path);
           }
         }
       }
