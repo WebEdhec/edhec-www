@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="col-10 ms-3">
                                         <p class="h5">{{ item["#paragraph"].fields.field_texte_b.0.value }}</p>
-                                        <p class="ps-3">{{ item["#paragraph"].fields.field_complement.0.value }}</p>
+                                        <div class="ps-3">{{ item["#paragraph"].fields.field_complement | view }}</div>
                                     </div>
                                 </div>
                             </div>

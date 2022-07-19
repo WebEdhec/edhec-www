@@ -82,7 +82,7 @@ thead {
 .paragraph.tabulation-1.fond-1 .nav-tabs .nav-link {background: #F0F0F0; color: #6B6B6B;}
 .paragraph.tabulation-1.fond-1 .nav-tabs .nav-link.active, 
 .paragraph.tabulation-1.fond-1 .nav-tabs .nav-link:hover {
-	color: #A52336; background: #fff;  border-top: 5px solid #A52336 !important;
+	color: #A52336; background: #fff;  border-top: 5px solid #A52336 !important; outline: 0;
 }
 .paragraph.tabulation-1.fond-1 .tab-content {border-top: 1px solid #fff;background: #fff;}
 /*.paragraph.tabulation-1.fond-1 nav {background: #F0F0F0;}*/

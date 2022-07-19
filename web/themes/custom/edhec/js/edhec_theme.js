@@ -226,6 +226,21 @@ jQuery(function ($) {
             }
         })
     }
+
+    //Side menu draggable ---------------------------------------------------------------------------
+    var newWindowWidth = $(window).width();
+    if (newWindowWidth < 900) {
+        $('.field--name-field-sidebar-cta').slick({
+            infinite: false,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            variableWidth: true,
+            cssEase: 'linear',
+            arrows: false,
+            speed: 500,
+        }) 
+    }
+
     //Ancres menus -----------------------------------------------------------------------------------
     $('.nav.nav-tabs').slick({
         infinite: false,
@@ -259,16 +274,16 @@ jQuery(function ($) {
         });
     });
 
-    var $navSlickLinks = $(".nav-tabs .slick-slide");
-    var $navSlickLinksButton = $(".nav-tabs .slick-slide button");
-    $navSlickLinks.each(function () {
-        $(this).on("click", function () {
-            $navSlickLinks.removeClass("slick-current slick-active");
-            $navSlickLinksButton.removeClass("active");
-            $(this).addClass("slick-current slick-active");
-            $(".slick-current.slick-active button").addClass("active");
-        });
-    });
+    // var $navSlickLinks = $(".nav-tabs .slick-slide");
+    // var $navSlickLinksButton = $(".nav-tabs .slick-slide button");
+    // $navSlickLinks.each(function () {
+    //     $(this).on("click", function () {
+    //         $navSlickLinks.removeClass("slick-current slick-active");
+    //         $navSlickLinksButton.removeClass("active");
+    //         $(this).addClass("slick-current slick-active");
+    //         $(".slick-current.slick-active button").addClass("active");
+    //     });
+    // });
 
     $(document).ready(function () {
         if ($('#menu-ancres').length != 0) {
@@ -290,15 +305,15 @@ jQuery(function ($) {
     });
 
     // Convert programme to accordion sur mobile ------------------------------------------------------
-    $(".mobile .accordion-button-programme").on('click', function () {
+    $('body').on('click', ".mobile .accordion-button-programme", function () {
         $(this).toggleClass('collapsed');
         $(this).parent().next().slideToggle();
     });
-    $(".mobile .accordion-button-programme-brochure").click(function () {
+    $('body').on('click', '.mobile .accordion-button-programme-brochure', function () {
         $(this).toggleClass('collapsed');
         $(this).next().slideToggle();
     });
-    $(".mobile .accordion-button-programme-brochure").keydown(function (event) {
+    $('body').on('keydown', ".mobile .accordion-button-programme-brochure", function (event) {
         if (event.which == '32') {
             event.preventDefault();
             $(this).toggleClass('collapsed');

@@ -82,32 +82,32 @@ view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
 <div class="listing shadow- cards views-row pt-0 views-row">
     <div class="views-field views-field-nothing coin-3">
         <div class="row g-0 fond-1 researcher-item">
-            <i class="fa fa-plus btn-more" data-bs-toggle="collapse" data-bs-target="#collapse_{{ node.id}}" aria-expanded="false" aria-controls="collapse_{{ node.id}}"></i>
+            <i class="fa fa-plus btn-more" data-bs-toggle="collapse" data-bs-target="#collapse_{{ node.id}}"></i>
             <div class="col-md-2 d-flex d-sm-block  photo-item">
                 {{ content.field_photo }}
                 <h5 class="card-title text-uppercase d-block d-sm-none ms-3 mt-2">{{ content.field_prenom.0 }} {{ content.field_nom.0 }}</h5>
             </div>
             <div class="col-md-10">
                 <div class="card-body">
-                    <h5 data-bs-toggle="collapse" data-bs-target="#collapse_{{ node.id }}" aria-expanded="false" aria-controls="collapse_{{ node.id}}" class="card-title text-uppercase d-none d-sm-block">{{ content.field_prenom.0 }} {{ content.field_nom.0 }}</h5>
+                    <h5 data-bs-toggle="collapse" data-bs-target="#collapse_{{ node.id }}" aria-expanded="false" aria-controls="collapse_{{ node.id}}" class="card-title text-uppercase d-none d-sm-block font-size-20">{{ content.field_prenom.0 }} {{ content.field_nom.0 }}</h5>
                     <div class="card-poste mb-1 my-sm-1">
-                        <span class="item-label poste-label">{{'Poste: '|trans}} </span> {{ content.field_poste.0}}, {{ content.field_poste_detaille|field_value }}
+                        <span class="item-label poste-label">{{'Poste: '|trans}} </span> {{ content.field_poste.0}}{% if content.field_poste_detaille|field_value is not empty  %}, {% endif %} {{ content.field_poste_detaille|field_value }}
                     </div>
                     <div class="row card-disp-dep">
                         <div class="col-md-auto mb-3 mb-sm-0">
-                            <span class="item-label disp-label">Discipline: </span>
+                            <span class="item-label disp-label">{{'Discipline : '|trans}} </span>
                             <span class="item-text disp-text">{{ content.field_discipline.0}}</span>
                         </div>
                         <div class="col-md-auto">
-                            <span class="item-label dep-label">{{'Département: '|trans}} </span>
-                            <span class="item-text dep-text">{{ content.field_departement.0}}</span>
+                            <span class="item-label dep-label">{{'Faculté: '|trans}} </span>
+                            <span class="item-text dep-text">{{ content.field_faculte.0}}</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card-more mt-4 px-3 px-sm-5 collapse" id="collapse_{{ node.id }}">
                 <div class="card-expertise">
-                    <span class="item-label poste-label">Expertise: </span> {{ content.field_expertise.0}}
+                    <span class="item-label poste-label">{{'Expertise: '|trans}} </span> {{ content.field_expertise.0}}
                 </div>
                 <div class="card-text chapo">{{ content.body|field_value }}</div>
                 <div class="node-link mb-3 text-center">

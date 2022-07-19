@@ -878,3 +878,28 @@ ul.sf-menu.sf-accordion .sf-expanded .sf-sub-indicator::after, #superfish-main-t
 .sf-expanded > a.sf-with-ul {
     background: #891E2E !important;
 }
+.bootstrap-select .dropdown-menu li a.separator {
+    display: none;
+}
+.menu.sf-menu .menu-group-title-container {
+    color: #fff;
+    padding: 15px 0 5px 0px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.tb-megamenu-row .menu-group-title-container {
+    border-top: 3px solid gray !important;
+    color: gray;
+    background: #fff;
+}
+.tb-megamenu-row .menu-group-title-container:hover {
+    color: #000!important;
+    border-top: 3px solid gray !important;
+}
+.breadcrumb-menu .menu-group-title {
+    color: gray;
+}
+.dialog-off-canvas-main-canvas .block-superfish.block-superfishmain {
+    background: #A52336;
+
+}

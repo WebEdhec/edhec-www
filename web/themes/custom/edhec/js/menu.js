@@ -17,6 +17,9 @@ jQuery(function ($) {
             if ( optionObject.url ) {
                 $option.attr('data-breadcrumb-menu--url', optionObject.url);
             }
+            if ('' != optionObject.classes) {
+                $option.addClass(optionObject.classes);
+            }
             if ( selectedOption === optionIndex ) {
                 $option.attr('selected', true);
             }
@@ -46,7 +49,8 @@ jQuery(function ($) {
 
             generated_menus['level_'+level+'_menu'].elements[index] = {
                 title: menu.title,
-                url: menu.url
+                url: menu.url,
+                classes: menu.classes
             };
 
             if (menu.in_active_trail) {
@@ -133,7 +137,8 @@ jQuery(function ($) {
         $.each(nested_menu.below, function(index, menu) {
             submenu.elements[index] = {
                 title: menu.title,
-                url: menu.url
+                url: menu.url,
+                classes: menu.classes
             };
         });
 

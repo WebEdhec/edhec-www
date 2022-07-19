@@ -44,7 +44,7 @@
 {% block paragraph %}
 {% block content %}
 {# Loops through the tab sections again to print the tab section bodies. #}
-<div class="paragraph paragraph--contacts p-50 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}">
+<div id="ancre-{{paragraph.id.value}}" class="paragraph paragraph--contacts p-50 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}">
     <div class="container position-relative">
         {{ content.field_entete }}
         <div {#% if paragraph.field_type_affichage.value ==1 %} data-masonry1='{"percentPosition": true }' {% endif %#}

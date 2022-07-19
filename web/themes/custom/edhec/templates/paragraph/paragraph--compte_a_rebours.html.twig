@@ -48,7 +48,7 @@
 %}
 {% set section_id = 'section' ~ paragraph.id.value %}
 {% block paragraph %}
-   <div class="paragraph paragraph--type--compte_a_rebours reveal p-50 paragraph--view-mode--default">
+   <div id="ancre-{{paragraph.id.value}}" class="paragraph paragraph--type--compte_a_rebours reveal p-50 paragraph--view-mode--default">
    <div class="paragraph_bg container pe-0 ps-0 pb-2">
     <div class="paragraph container text-center paragraph--type--encadre p-50 coin-3 paragraph--view-mode--default fond fond-2">
     {% block content %}

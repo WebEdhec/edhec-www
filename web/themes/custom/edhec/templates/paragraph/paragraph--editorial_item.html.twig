@@ -1,7 +1,7 @@
 {% block paragraph %}
 {% block content %}
 
-	
+	{% if content.field_contenu_item.0 is not empty  %}
 	<article role="article" class="contextual-region cards node--type-edito node--view-mode-teaser">
 		<div class="node__content">
 			<div class="field--name-field-header">
@@ -47,5 +47,6 @@
 
 	    </div>
     </article>
+	{% endif %}
 {% endblock %}
 {% endblock paragraph %}

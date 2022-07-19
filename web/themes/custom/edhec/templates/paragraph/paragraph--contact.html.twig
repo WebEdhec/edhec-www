@@ -28,12 +28,14 @@
 		<div class="col-12 body-accordion">
 			{% if content.field_telephone.0 is not null %}
 			<div class="pt-2">
-				{% include '/themes/custom/edhec/img/phone.svg' %} {{ content.field_telephone.0 }}
+				{% include '/themes/custom/edhec/img/phone.svg' %} 
+				{{ content.field_telephone.0 }}
 			</div>
 			{% endif %}
 			{% if content.field_email.0 is not null %}
 			<div class="pt-2">
-				{% include '/themes/custom/edhec/img/email.svg' %} {{ content.field_email.0 }}
+				{% include '/themes/custom/edhec/img/email.svg' %} 
+				<a href='mailto:{{ content.field_email.0 }}' target="_blank" class="px-1 text-decoration-none">{{ content.field_email.0 }}</a>
 			</div>
 			{% endif %}
 			{% if content.field_lien.0['#url'] is not null %}

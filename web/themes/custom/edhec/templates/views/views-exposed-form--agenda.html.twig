@@ -31,8 +31,14 @@
   </div>
   <div class="group-filter-2 d-md-flex w-100">
     <div class="d-flex">
-      <label for="edit-date-start" class="date-filter-label">{{'Du'|trans}}</label> {{ form['date_start'] }}
-      <label for="edit-date-end" class="date-filter-label ms-2" class="date-filter-label">{{' au'|trans}}</label> {{ form['date_end'] }}
+      <label for="edit-date-start" class="date-filter-label">
+      {{'Du'|trans}}
+      <span class="visually-hidden">Date au format jj/mm/aaaa</span>
+      </label> {{ form['date_start'] }}
+      <label for="edit-date-end" class="date-filter-label ms-2" class="date-filter-label">
+      {{' au'|trans}}
+       <span class="visually-hidden">Date au format jj/mm/aaaa</span>
+      </label> {{ form['date_end'] }}
     </div>
     <div class="ms-auto">
       {{ form['actions']['submit'] }}

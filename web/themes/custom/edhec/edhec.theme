@@ -10,6 +10,16 @@ use Drupal\node\Entity\Node;
 function _clean_nested_menues(&$nested_menues_to_clean) {
 
     foreach ($nested_menues_to_clean as $key => &$value) {
+        
+        if ( 'url' === $key && $value instanceof \Drupal\Core\Url ) {
+            $attributes = $value->getOption('attributes');
+            if (isset($attributes['class'])) {
+                $nested_menues_to_clean['classes'] = implode(' ', $attributes['class']);
+            } else {
+                $nested_menues_to_clean['classes'] = '';
+            }
+        }
+
         if (is_object($value)) {
             if ( method_exists($value, '__toString') ) {
                 $value = (string) $value;

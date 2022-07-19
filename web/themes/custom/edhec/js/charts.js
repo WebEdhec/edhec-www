@@ -11,7 +11,7 @@ jQuery(function( $ ) {
             $('.graphique_container').not('.graphic-initialized').each(function(){
                 if (window.innerHeight > this.getBoundingClientRect().top + $(this).height()*0.4) {
                     $(this).find(".progress-bar-primary").each(function(){
-                        console.log($(this).attr('aria-valuenow'))
+                        // console.log($(this).attr('aria-valuenow'))
                         $(this).animate({
                             width : $(this).attr('aria-valuenow') + '%',
                         })
@@ -60,8 +60,9 @@ jQuery(function( $ ) {
                                         colors: pieColors,
                                         dataLabels: {
                                             enabled: true,
-                                            format: '<b>{point.name}</b><br>{point.y}',
-                                            distance: -50,
+                                            //format: '<b>{point.name}</b><br>{point.y} %',
+                                            format: '<b>{point.name}: <b>{point.percentage:.1f}% ',
+                                            //distance: -50,
                                             filter: {
                                                 property: 'percentage',
                                                 operator: '>',

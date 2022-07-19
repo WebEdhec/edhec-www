@@ -49,6 +49,7 @@ jQuery(function( $ ) {
                 $mmenuBody.animate({right: ""});
                 $mmenuBlocker.fadeIn( "slow", "linear", function() {
                     $body.addClass("mm-wrapper--opened");
+                    $('#off-canvas').addClass('mm-menu--opened');
                 });
                 $mburgerButton.addClass("menu-opened");
             }
@@ -56,6 +57,7 @@ jQuery(function( $ ) {
                 $mmenuBody.animate({right: "-3px"});
                 $mmenuBlocker.fadeIn( "slow", "linear", function() {
                     $body.addClass("mm-wrapper--opened");
+                    $('#off-canvas').addClass('mm-menu--opened');
                 });
             }
     })

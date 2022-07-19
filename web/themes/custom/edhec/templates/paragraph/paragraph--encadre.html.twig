@@ -47,7 +47,7 @@
   ]
 %}
 {% block paragraph %}
-  <div class="paragraph_bg container pe-0 ps-0 pb-2">
+  <div id="ancre-{{paragraph.id.value}}" class="paragraph_bg container pe-0 ps-0 pb-2">
   <div class="paragraph container paragraph--type--encadre p-50 coin-3 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}">
     {% block content %}
       {% if content.field_titre.0 %}

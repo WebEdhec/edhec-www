@@ -5,7 +5,7 @@
   }
 </style>
 {% endif %}
-<div {{ attributes }} aria-label="{{'Menu principal'|trans}}">
+<nav {{ attributes }} aria-label="{{'Menu principal'|trans}}">
   {% if section == 'frontend' %}
     <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar tb-megamenu-button" type="button">
       <i class="fa fa-reorder">Main menu button</i>
@@ -16,4 +16,4 @@
   {% if section == 'frontend' %}
     </div>
   {% endif %}
-</div>
+</nav>

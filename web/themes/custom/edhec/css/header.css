@@ -263,7 +263,7 @@ header.sticky .btn-search.search-active {
     position: relative;
     overflow: hidden;
     max-height: calc(100vh - 70px);
-    height: 730px;
+    height: 720px;
     background-color: #576679;
 }
 .header-descktop,

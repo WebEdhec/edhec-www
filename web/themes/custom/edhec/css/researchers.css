@@ -1,3 +1,7 @@
+.view-researchers.researchers-list .researcher-item .p-to-button.title-mobile {
+    margin: 0!important;
+    margin-left: 10px!important;
+}
 .researchers-list .researcher-item .btn-more {
     cursor: pointer;
     position: absolute;
@@ -45,6 +49,16 @@
         top: inherit !important;
         width: 100% !important;
         transform: none !important;
+    }
+    .view-phd-researchers .card-title {
+        padding: 20px 0 0 15px!important;
+    }
+    .view-researchers.researchers-list .researcher-item .btn-more {
+        cursor: pointer;
+        position: absolute;
+        width: 15px;
+        top: 45px;
+        right: 25px;
     }
 }
 
@@ -108,4 +122,11 @@ ul.breadcrumb li {
 
 ul.breadcrumb a {
     /*color: #A52336 !important;*/
+}
+
+.view-phd-researchers .researcher-item .photo-item {
+    display: flex!important;
+}
+.view-phd-researchers .card-title {
+    padding: 5px 0 0 15px;
 }

@@ -45,7 +45,7 @@
 {% block content %}
 
 {# Loops through the tab sections again to print the tab section bodies. #}
-<div class="container paragraph paragraph--type--graphique p-50 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}" data-graphic  data-graphic-type="{{ paragraph.field_type_graphique.value }}">
+<div id="ancre-{{paragraph.id.value}}" class="container paragraph paragraph--type--graphique p-50 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}" data-graphic  data-graphic-type="{{ paragraph.field_type_graphique.value }}">
     <div class="paragraph position-relative row">
         {{ content.field_entete }}
         <div class="graphique_container graphique row {% if  paragraph.field_type_graphique.value == '2'%} m-0 p-0 horizontal-graphique{% endif %}">
@@ -68,7 +68,7 @@
                     </div>
                  {% elseif  paragraph.field_type_graphique.value == '2'%}
                     <div class="progress-simple pregress-horizontal">
-                    <label for="file">{{ item['#paragraph'].field_libelle.value }}</label>
+                    <label for="file">{{ item['#paragraph'].field_libelle.value }} : </label>
                     <div class="progress progress-no-border-radius">
                         <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{ item['#paragraph'].field_complement_item.value|number_format(1) }}" aria-valuemin="0" aria-valuemax="100" >
                             <span class="sr-only">{{ item['#paragraph'].field_complement_item.value|number_format(1) }}%</span>

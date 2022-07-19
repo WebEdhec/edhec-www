@@ -47,7 +47,7 @@
   ]
 %}
 {% block paragraph %}
-    <div class="container-fluid paragraph paragraph--type--contenu reveal p-50 pe-xl-0 ps-xl-0 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}">
+    <div id="ancre-{{paragraph.id.value}}" class="container-fluid paragraph paragraph--type--contenu reveal p-50 pe-xl-0 ps-xl-0 paragraph--view-mode--default fond fond-{{ paragraph.field_fond.value }}">
     {% block content %}
       <div class="container">{{ content.field_entete }}</div>
       <div class="container-fluid">{{ content.field_contenu }}</div>

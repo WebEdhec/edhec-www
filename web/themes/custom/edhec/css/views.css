@@ -889,7 +889,9 @@ input.webform-button--submit.bn-valider-b {
   color: #fff;
   font-weight: 600;
 }
-
+.view-actualites.view-display-id-block_4 .row {
+    min-height: 500px;
+}
 @media (max-width: 700px) {
     .promoted-actualites .view-content {
         display: block;

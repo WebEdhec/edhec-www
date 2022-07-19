@@ -47,7 +47,7 @@
   ]
 %}
 {% block paragraph %}
-  <div class="paragraph paragraph--type--programme paragraph--view-mode--default">
+  <div id="ancre-{{paragraph.id.value}}" class="paragraph paragraph--type--programme paragraph--view-mode--default paragraph_bg_{{ content.field_programme_contenu['#items'] | length }}">
     {% block content %}
       <div class="field--name-field-programme-contenu">
         {% for key, item in content.field_programme_contenu if key|first != '#' %}

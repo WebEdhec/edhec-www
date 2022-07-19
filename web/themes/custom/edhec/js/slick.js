@@ -1334,9 +1334,9 @@
             _.$dots.attr('role', 'tablist').find('li').each(function(i) {
                 var mappedSlideIndex = tabControlIndexes[i];
 
-                $(this).attr({
-                    'role': 'presentation'
-                });
+                // $(this).attr({
+                //     'role': 'presentation'
+                // });
 
                 $(this).find('button').first().attr({
                     // 'role': 'tab',
