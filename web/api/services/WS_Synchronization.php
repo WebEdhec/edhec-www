@@ -140,7 +140,7 @@ class WS_Synchronization
                 // Set the node data
                 $data = [
                     'type' => 'auteur_externe',
-                    'langcode' => 'fr',
+                    'langcode' => 'en',
                     'uid' => $this->cronUser ? $this->cronUser->id() : 1,
                     'title' => $title,
                     'field_nom' => $title,
@@ -280,7 +280,7 @@ class WS_Synchronization
                 // Set the node data
                 $data = [
                     'type' => 'cv',
-                    'langcode' => 'fr',
+                    'langcode' => 'en',
                     'uid' => $this->cronUser ? $this->cronUser->id() : 1,
                     'title' => $title,
                     'field_titre' => $title,
@@ -404,7 +404,7 @@ class WS_Synchronization
                 // Set the node data
                 $data = [
                     'type' => 'publication',
-                    'langcode' => 'fr',
+                    'langcode' => 'en',
                     'uid' => $this->cronUser ? $this->cronUser->id() : 1,
                     'title' => $title,
                     'body' => isset($wsData->field_short_description) ? $wsData->field_short_description : '',
