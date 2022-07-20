@@ -246,25 +246,6 @@
 
         /* --------- LINK #90 --------- */
         // CTA click
-        $(".btn-simulate", context).click(function (e) {
-          // e.preventDefault();
-          // e.stopPropagation();
-
-          // Push search query to dataLayer
-          pushDataLayer({
-            event: "interaction",
-            actionName: "simulateur_aide_financiere",
-          });
-
-          console.log({
-            event: "interaction",
-            actionName: "simulateur_aide_financiere",
-          })
-        });
-        /* --------- End LINK #90 --------- */
-
-        /* --------- LINK #95 --------- */
-        // CTA click
         $(".btn-download, a.down", context).click(function (e) {
           // e.preventDefault();
           // e.stopPropagation();
@@ -279,6 +260,25 @@
             actionParameter1: linkLabel,
             actionParameter2: window.location.href,
           });
+        });
+        /* --------- End LINK #90 --------- */
+
+        /* --------- LINK #95 --------- */
+        // CTA click
+        $(".btn-simulate", context).click(function (e) {
+          // e.preventDefault();
+          // e.stopPropagation();
+
+          // Push search query to dataLayer
+          pushDataLayer({
+            event: "interaction",
+            actionName: "simulateur_aide_financiere",
+          });
+
+          console.log({
+            event: "interaction",
+            actionName: "simulateur_aide_financiere",
+          })
         });
         /* --------- End LINK #95 --------- */
 
