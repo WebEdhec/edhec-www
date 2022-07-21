@@ -137,6 +137,14 @@ class WS_Synchronization
                 $ws_nid = (int) $wsData->nid;
                 $title = $wsData->title;
 
+                /* ----------------------- Status (Published) ----------------------- */
+                $status = 1;
+
+                if (isset($wsData->status)) {
+                    $status = $wsData->status == 'On' ? 1 : 0;
+                }
+                /* ----------------------- END Status (Published) ----------------------- */
+
                 // Set the node data
                 $data = [
                     'type' => 'auteur_externe',
@@ -146,7 +154,8 @@ class WS_Synchronization
                     'field_nom' => $title,
                     'field_poste' => isset($wsData->field_affiliation) ? $wsData->field_affiliation : '',
                     'field_ws_nid' => $ws_nid,
-                    'changed' => time()
+                    'changed' => time(),
+                    'status' => $status,
                 ];
 
                 // Find node and (create|update) it if (not found|found)
@@ -277,6 +286,14 @@ class WS_Synchronization
                 }
                 /* ----------------------- END CV ----------------------- */
 
+                /* ----------------------- Status (Published) ----------------------- */
+                $status = 1;
+
+                if (isset($wsData->status)) {
+                    $status = $wsData->status == 'On' ? 1 : 0;
+                }
+                /* ----------------------- END Status (Published) ----------------------- */
+
                 // Set the node data
                 $data = [
                     'type' => 'cv',
@@ -300,7 +317,8 @@ class WS_Synchronization
                     'field_photo' => $photo,
                     'field_pdf' => $cv,
                     'field_ws_nid' => $ws_nid,
-                    'changed' => time()
+                    'changed' => time(),
+                    'status' => $status,
                 ];
 
                 // Find node and (create|update) it if (not found|found)
@@ -397,6 +415,14 @@ class WS_Synchronization
                 $pubTypes = $this->findTermsAndCreateIfNotExist($wsData->field_category, $ws_tid_key, $vid);
                 /* ----------------------- END PUBLICATION TYPE ----------------------- */
 
+                /* ----------------------- Status (Published) ----------------------- */
+                $status = 1;
+
+                if (isset($wsData->status)) {
+                    $status = $wsData->status == 'On' ? 1 : 0;
+                }
+                /* ----------------------- END Status (Published) ----------------------- */
+
                 // Date publication
                 $publicationDate = EdhecTools::getTextBetweenTags($wsData->field_publication_date, 'time');
                 $publicationDate = date('Y-m-d', strtotime($publicationDate));
@@ -415,7 +441,8 @@ class WS_Synchronization
                     'field_faculte' => $faculties,
                     'field_type' => $pubTypes,
                     'field_ws_nid' => $ws_nid,
-                    'changed' => time()
+                    'changed' => time(),
+                    'status' => $status,
                 ];
 
                 // Find node and (create|update) it if (not found|found)
