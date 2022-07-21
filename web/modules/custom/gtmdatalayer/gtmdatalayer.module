@@ -364,7 +364,7 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
                 $programmesNames = '';
 
                 if (isset($node->getFields()['field_programme'])) {
-                    $_departementsNames = [];
+                    $_programmesNames = [];
 
                     foreach ($node->field_programme as $programme) {
                         if ($programme) {
