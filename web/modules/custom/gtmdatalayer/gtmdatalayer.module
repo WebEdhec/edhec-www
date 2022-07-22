@@ -124,7 +124,7 @@ function gtmdatalayer_datalayer_alter(&$data_layer)
         }
         
         // Get language
-        $language = strtoupper(\Drupal::languageManager()->getDefaultLanguage()->getId());
+        $language = strtoupper(\Drupal::languageManager()->getCurrentLanguage()->getId());
 
         $data_layer = [
             'event' => 'page',
