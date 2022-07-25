@@ -37,3 +37,4 @@
 .htaccess
 .htpasswd
 .sass-cache
+/web/.htaccess
