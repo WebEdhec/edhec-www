@@ -34,5 +34,6 @@
 /web/core/
 /drush/contrib/
 
+.htaccess
 .htpasswd
 .sass-cache
