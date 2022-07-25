@@ -120,6 +120,16 @@ AddEncoding gzip svgz
   # uncomment the following line:
   # RewriteBase /
 
+	# RewriteRule ^/?old-path/(.*)$ /new-path/$1 [L,R=301]
+
+	# "réécrire les url Edhec vox reprise de cette manière : 
+	# /fr/edhecvox/xxx => /fr/recherche-et-faculte/edhec-vox/
+	# /en/edhecvox/xxx.  => /fr/research-and-faculty/edhec-vox/
+	# + mettre redirection dans htaccess."
+
+	RewriteRule ^fr/edhecvox/(.*)$ /fr/recherche-et-faculte/edhec-vox/$1 [L,R=301]
+	RewriteRule ^en/edhecvox/(.*)$ /en/research-and-faculty/edhec-vox/$1 [L,R=301]
+
   # Redirect common PHP files to their new locations.
   RewriteCond %{REQUEST_URI} ^(.*)?/(install\.php) [OR]
   RewriteCond %{REQUEST_URI} ^(.*)?/(rebuild\.php)

@@ -1,7 +1,7 @@
 <?php
 
-use Drupal;
 use Drupal\node\Entity\Node;
+use Drupal\Core\Url;
 /**
  * @file
  * Edhec theme file.
@@ -11,7 +11,7 @@ function _clean_nested_menues(&$nested_menues_to_clean) {
 
     foreach ($nested_menues_to_clean as $key => &$value) {
         
-        if ( 'url' === $key && $value instanceof \Drupal\Core\Url ) {
+        if ( 'url' === $key && $value instanceof Url ) {
             $attributes = $value->getOption('attributes');
             if (isset($attributes['class'])) {
                 $nested_menues_to_clean['classes'] = implode(' ', $attributes['class']);

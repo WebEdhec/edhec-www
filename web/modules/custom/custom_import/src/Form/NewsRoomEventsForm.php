@@ -360,8 +360,6 @@ class NewsRoomEventsForm extends FormBase {
     $categorie = $service->getTerm($item->field_category_event_tid, 'evenement_format', TRUE);
     $node->field_format->setValue($categorie);
     
-    $node->field_langue->setValue(89);
-    
     $node->setChangedTime($item->changed);
     $node->save();
   }

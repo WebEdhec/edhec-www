@@ -422,7 +422,7 @@ i.icone-podcast {
     width: 20px;
     height: 20px;
     position: absolute;
-    margin: 0px 10px;
+    margin: 22px 10px;
 }
 .publication-infos-container:before {
     content: url(../img/profil.svg);

@@ -293,8 +293,6 @@ class EventForm extends FormBase {
     // OLD ID WS
     $node->field_od_id_ws->setValue($item->field_id_ws_value);
     
-    $node->field_langue->setValue(89);
-    
     $node->setChangedTime($item->changed);
     $node->save();
   }

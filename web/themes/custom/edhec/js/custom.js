@@ -2,12 +2,12 @@
 
 jQuery(function( $ ) {
 
-    jQuery('a[href^="#"]').click(function() {
-        var target = jQuery(this.hash);
-        // if (target.length == 0) target = jQuery('a[name="' + this.hash.substr(1) + '"]');
-        // if (target.length == 0) target = jQuery('html');
-        jQuery('html, body').animate({ scrollTop: target.offset().top - 150 }, 10);
-        return false;
+    $('a[href^="#"]').click(function() {
+        var target = $(this.hash);
+        // if (target.length == 0) target = $('a[name="' + this.hash.substr(1) + '"]');
+        // if (target.length == 0) target = $('html');
+        // $('html, body').animate({ scrollTop: target.offset().top - 150 }, 10);
+        // return false;
     });
 
     //Add alt to images professors/researchers views
@@ -39,36 +39,39 @@ jQuery(function( $ ) {
 
     changeParagraphToButtonInSearchersView();
 
-    function openTabOnLinkClick () {    
-            var $currentUrl = window.location.href;
-                if ($currentUrl.indexOf("#") >= 0) {
-                    var $destination = $currentUrl.substring($currentUrl.indexOf("#"), $currentUrl.length);
-                    // console.log($destination);
-                    var $tab_id = $destination.substring($destination.indexOf("#"), $destination.length);
-                    console.log($tab_id);
-                $('.nav-link').each(function() {
-                    $navLink = $(this);
-                    if ($navLink.attr('data-bs-target') == $tab_id) {
-                        $navLink.click();
-                        $('.nav-link').each(function() {
-                            $(this).removeClass('active');
-                        })
-                    $navLink.addClass('active');
-                    }
-                })
-                $('.tab-pane').each(function() {
-                    var $tabPane = $(this);
-                    if ('#' + $tabPane.attr('id') == $tab_id) {
-                        $('.tab-pane').each(function() {
-                            $(this).removeClass('active');
-                        })
-                        $tabPane.addClass('show active');
-                    }
-                })
-            }
-    }
+    function openTabOnLinkClick () {  
 
-    openTabOnLinkClick();
+        if ( '' !== window.location.hash ) {
+            var targeted_tab = window.location.hash;
+            $('.nav-link[data-bs-target]').each(function() {
+                var $navLink = $(this);
+                if ($navLink.attr('data-bs-target') == targeted_tab) {
+                    $navLink.closest('.nav-tabs, .nav-pills').find('.nav-link').not(this).removeClass('active');
+                    $('html').animate({ scrollTop: $navLink.offset().top - 300 }, 10, 'linear', function () {
+                        $navLink.click();
+                    });
+                }
+            })
+            $('.accordion-button').each(function() {
+                var $accordionButton = $(this);
+                if ($accordionButton.attr('data-bs-target') == targeted_tab) {
+                    $('html').animate({ scrollTop: ($accordionButton.offset().top - 300) }, 10, 'linear',  function () {
+                        $accordionButton.click();
+                    });
+                }
+            })
+            $('.tab-pane').each(function() {
+                var $tabPane = $(this);
+                if ('#' + $tabPane.attr('id') == targeted_tab) {
+                    $('.tab-pane').each(function() {
+                        $(this).removeClass('active');
+                    })
+                    $tabPane.addClass('show active');
+                }
+            })
+        }
+    }
+    $(window).on('load', openTabOnLinkClick);
 
     $('.menu.sf-menu .menu-group-title').parent().addClass('menu-group-title-container');
     $('.tb-megamenu-row .menu-group-title').parent().addClass('menu-group-title-container');

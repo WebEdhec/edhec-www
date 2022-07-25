@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Database\Database;
+use Drupal\pathauto\PathautoState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AssociationForm extends FormBase {
@@ -216,6 +217,37 @@ class AssociationForm extends FormBase {
     } else {
       $node->field_logo->setValue(NULL);
     }
+		
+		// Alias
+		// $alias = $node->path->alias;
+		// if(!empty($alias)) {
+			
+			// if($item->language == 'fr') {
+				// $new_alias = '/experience-etudiante' . $alias;
+			// }
+			
+			// if($item->language == 'en') {
+				// $new_alias = '/student-experience' . $alias;
+			// }
+			
+
+		// } else {
+
+		// }
+		
+		$pathauto = \Drupal::service('pathauto.alias_cleaner');
+		$new_title = $pathauto->cleanString($item->title);
+		if($item->language == 'fr') {
+			$new_alias = '/experience-etudiante/associations/' . $new_title;
+		}
+		if($item->language == 'en') {
+			$new_alias = '/student-experience/associations/' . $new_title;
+		}
+		
+		$node->path->setValue([
+			'alias' => $new_alias,
+			'pathauto' => PathautoState::SKIP,
+		]);
     
     $node->setChangedTime($item->changed);
     $node->save();

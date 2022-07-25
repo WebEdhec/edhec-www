@@ -1,3 +1,8 @@
+.block-language .contextual .trigger.focusable {
+    position: absolute;
+    right: -30px;
+}
+
 .actualite-proprietes {
     display: flex;
 }

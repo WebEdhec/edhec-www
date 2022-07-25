@@ -8,6 +8,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\pathauto\PathautoState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class VoxForm extends FormBase {
@@ -251,6 +252,22 @@ class VoxForm extends FormBase {
     } else {
       $node->field_media->setValue(0);
     }
+		
+		$alias = $node->path->alias;
+		if(!empty($alias)) {
+			if(substr($alias, 0, 10) == '/edhecvox/') {
+				if($item->language == 'fr') {
+					$new_alias = '/recherche-et-faculte/edhec-vox/' . substr($alias, 10);
+				}
+				if($item->language == 'en') {
+					$new_alias = '/research-and-faculty/edhec-vox/' . substr($alias, 10);
+				}
+				$node->path->setValue([
+					'alias' => $new_alias,
+					'pathauto' => PathautoState::SKIP,
+				]);
+			}
+		}
    
     $node->setChangedTime($item->changed);
     $node->save();

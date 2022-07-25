@@ -57,11 +57,22 @@
             {% for key, item in content.field_single_accordion if key|first != '#' %}
             <div class="accordion-item">
                 <div class="h2 accordion-header" id="heading-{{ section_id }}-{{ key + 1 }}">
-                    <button class="accordion-button collapsed {#% if key != 0 %} collapsed {% endif %#}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ section_id }}-{{ key + 1 }}" aria-expanded="false" aria-controls="collapse-{{ section_id }}-{{ key + 1 }}">
+                    <button class="accordion-button collapsed {#% if key != 0 %} collapsed {% endif %#}" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            {#data-bs-target="#collapse-{{ section_id }}-{{ key + 1 }}"#}
+                            data-bs-target="#ancre-{{ item['#paragraph'].id.value }}" 
+                            aria-expanded="false" 
+                            aria-controls="collapse-{{ section_id }}-{{ key + 1 }}">
                         {{ item['#paragraph'].field_title_accordion.value }}
                     </button>
                 </div>
-                <div id="collapse-{{ section_id }}-{{ key + 1 }}" class="accordion-collapse collapse {#% if key == 0 %} show {% endif %#}" aria-labelledby="heading-{{ section_id }}-{{ key + 1 }}" data-bs-parent="#accordion{{ section_id }}">
+                <div {#id="collapse-{{ section_id }}-{{ key + 1 }}"#}
+                      id="ancre-{{ item['#paragraph'].id.value }}"  
+                      class="accordion-collapse collapse
+                      {#% if key == 0 %} show {% endif %#}"
+                      aria-labelledby="heading-{{ section_id }}-{{ key + 1 }}"
+                      data-bs-parent="#accordion{{ section_id }}">
                     <div class="accordion-body pt-0">
                         {{ item }}
                     </div>

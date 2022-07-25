@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Database\Database;
+use Drupal\pathauto\PathautoState;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StartUpForm extends FormBase {
@@ -362,6 +363,40 @@ class StartUpForm extends FormBase {
     } else {
       $node->body->setValue(NULL);
     }
+		
+		// Alias
+		// $alias = $node->path->alias;
+		// if(!empty($alias)) {
+			
+			// if(substr($alias, 0, 10) == '/start-up/') {
+				// $alias = substr($alias, 10);
+			// }
+			
+			// if($item->language == 'fr') {
+				// $new_alias = '/a-propos/entreprendre-a-l-edhec/edhec-entrepreneurs/nos-startups/' . $alias;
+			// }
+			
+			// if($item->language == 'en') {
+				// $new_alias = '/about-us/entrepreneurship-business-school/startups/' . $alias;
+			// }
+		// } else {
+			// $pathauto = \Drupal::service('pathauto.alias_cleaner');
+
+		// }
+		
+		$pathauto = \Drupal::service('pathauto.alias_cleaner');
+		$new_title = $pathauto->cleanString($item->title);
+		if($item->language == 'fr') {
+			$new_alias = '/a-propos/entreprendre-a-l-edhec/edhec-entrepreneurs/nos-startups/' . $new_title;
+		}
+		if($item->language == 'en') {
+			$new_alias = '/about-us/entrepreneurship-business-school/startups/' . $new_title;
+		}
+		
+		$node->path->setValue([
+			'alias' => $new_alias,
+			'pathauto' => PathautoState::SKIP,
+		]);
 
     $node->setChangedTime($item->changed);
     $node->save();

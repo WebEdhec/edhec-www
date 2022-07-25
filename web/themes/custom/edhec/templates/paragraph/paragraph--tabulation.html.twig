@@ -103,7 +103,13 @@
             <div class="d-flex align-items-start- h-700">
                 <div class="nav flex-column nav-pills me-3x col-lg-4 col-12" id="v-pills-tab-{{ section_id }}" role="tablist" aria-orientation="vertical">
                       {% for key, item in content.field_single_accordion if key|first != '#' %}  
-                          <h3>
+                        {% if paragraph.field_hn.value == '0' %}
+                            <h2>
+                        {% elseif  paragraph.field_hn.value == '2' %}
+                            <h4>
+                        {% else %}
+                            <h3>
+                        {% endif %}
                               <button class="nav-link {% if key == 0 %} active {% endif %}" {% if key == 0 %} 
                                       tabindex="0" 
                                       aria-selected="true" {% else %} 
@@ -116,7 +122,13 @@
                                       role="tab" 
                                       aria-controls="v-pills-{{ key + 1 }}-{{ section_id }}">{{ item['#paragraph'].field_title_accordion.value }}
                               </button>
-                          </h3>
+                        {% if paragraph.field_hn.value == '0' %}
+                            </h2>
+                        {% elseif  paragraph.field_hn.value == '2' %}
+                            </h4>
+                        {% else %}
+                            </h3>
+                        {% endif %}
                       {% endfor %}
                 </div>
                 <div class="tab-content fond-0 col-lg-8 col-12" id="v-pills-tabContent-{{ section_id }}">
@@ -144,17 +156,30 @@
       <div>
         <div class="nav nav-tabs justify-content-center" id="nav-tab-{{ section_id }}" role="tablist">
          {% for key, item in content.field_single_accordion if key|first != '#' %}
-            <h3>
+            {% if paragraph.field_hn.value == '0' %}
+                <h2>
+            {% elseif  paragraph.field_hn.value == '2' %}
+                <h4>
+            {% else %}
+                <h3>
+            {% endif %}
                 <button class="nav-link {% if key == 0 %} active {% endif %}" 
                     id="nav-{{ key + 1 }}-tab-{{ section_id }}" 
                     data-bs-toggle="pill" 
                     data-bs-target="#ancre-{{ item['#paragraph'].id.value }}" 
                     type="button" role="tab" 
-                    aria-controls="nav-{{ key + 1 }}-{{ section_id }}" 
+                    {# aria-controls="nav-{{ key + 1 }}-{{ section_id }}"  #}
+                    aria-controls="ancre-{{ item['#paragraph'].id.value }}" 
                     aria-selected="true" ancre="#nav-{{ key + 1 }}-{{ section_id }}">
                     {{ item['#paragraph'].field_title_accordion.value }}
                 </button>
-            </h3>
+            {% if paragraph.field_hn.value == '0' %}
+                </h2>
+            {% elseif  paragraph.field_hn.value == '2' %}
+                </h4>
+            {% else %}
+                </h3>
+            {% endif %}
          {% endfor %}
         </div>
       </div>

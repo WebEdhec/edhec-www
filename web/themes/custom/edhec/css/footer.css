@@ -58,6 +58,9 @@ a.icon-tiktok {
 .toolbar-tray-open nav.tabs-wrapper.tabs-primary.is-collapsible {
     margin: 0;
 }
+.toolbar-tray-open.mm-wrapper {
+    overflow-x: initial;
+}
 .alert.alert-status {
     padding: 1.25rem 1rem;
 }
