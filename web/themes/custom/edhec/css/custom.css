@@ -229,3 +229,11 @@ ul.dropdown-menu.show {
     height: auto; 
     overflow: visible; 
  }
+
+ .paragraph--type--paragraph_accordion_multiple.paragraph--view-mode--default .container {
+    padding: 0;
+ }
+
+ .paragraph--type--media.paragraph--view-mode--default .remote-video .field--name-field-media-oembed-video {
+    padding-bottom: 358px !important;
+ }
