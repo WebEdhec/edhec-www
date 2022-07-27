@@ -42,9 +42,9 @@ class WS_Synchronization
     {
         $changedDate = EdhecTools::getLastXDays(6);
 
-        self::$wsExternalAuthorsUrl .= '?changed=' . $changedDate;
-        self::$wsResearchersUrl .= '?changed=' . $changedDate;
-        self::$wsPublicationsUrl .= '?changed=' . $changedDate;
+        // self::$wsExternalAuthorsUrl .= '?changed=' . $changedDate;
+        // self::$wsResearchersUrl .= '?changed=' . $changedDate;
+        // self::$wsPublicationsUrl .= '?changed=' . $changedDate;
     }
 
     /**
@@ -62,24 +62,24 @@ class WS_Synchronization
         /* ------------------ EXTERNAL AUTHORS ------------------- */
 
         // Get external authors from WS
-        $externalAuthors = $this->getExternalAuthors();
+        /*$externalAuthors = $this->getExternalAuthors();
 
         // Save external authors into website database
         if ($externalAuthors) {
            $this->saveExternalAuthors($externalAuthors);
-        }
+        }*/
 
         /* ---------------- END EXTERNAL AUTHORS ----------------- */
 
         /* ------------------ RESEARCHERS ------------------- */
 
         // Get researchers from WS
-        $researchers = $this->getResearchers();
+        /*$researchers = $this->getResearchers();
 
         // Save researchers into website database
         if ($researchers) {
            $this->saveResearchers($researchers);
-        }
+        }*/
 
         /* ---------------- END RESEARCHERS ----------------- */
 
@@ -423,6 +423,50 @@ class WS_Synchronization
                 }
                 /* ----------------------- END Status (Published) ----------------------- */
 
+                /* ----------------------- Cibles ----------------------- */
+                $cibles = [];
+
+                // Find cible by faculty id
+                foreach ($faculties as $faculty) 
+                {
+                    if ($faculty->field_ws_fac_tid->value) {
+                        $result = $this->getTermByField('field_ws_recherche_faculty', $faculty->field_ws_fac_tid->value, 'cible');
+
+                        if($result && !isset($cibles[$result->tid->value])) {
+                            $cibles[] = $result->tid->value;
+                        }
+                    } 
+                }
+
+                // Find cible by organization id
+                if (!empty(trim($wsData->field_edhec_organization))) 
+                {
+                    // Get edhec organizations names (Multiple values possible)
+                    $edhecOrganizationsWithId = explode(self::SEPARATOR, $wsData->field_edhec_organization);
+                    
+                    foreach ($edhecOrganizationsWithId as $_edhecOrganizationWithId) 
+                    {
+                        if (empty($_edhecOrganizationWithId)) {
+                            continue;
+                        }
+            
+                        // Extract the term name without ID e.g., 'EDHEC-Infra+123+' => 'EDHEC-Infra'
+                        $edhecOrganizationName = $this->getWordFromStringWithoutId($_edhecOrganizationWithId);
+                        // Extract the edhec organization id e.g., 'EDHEC-Infra+123+' => '123'
+                        $edhecOrganizationId = $this->getIdFromString($_edhecOrganizationWithId);
+                        
+                        if($edhecOrganizationId) 
+                        {
+                            $result = $this->getTermByField('field_ws_recherche_edhec_organis', $edhecOrganizationId, 'cible');
+
+                            if($result && !isset($cibles[$result->tid->value])) {
+                                $cibles[] = $result->tid->value;
+                            } 
+                        } 
+                    }
+                }
+                /* ----------------------- End cibles ----------------------- */
+
                 // Date publication
                 $publicationDate = EdhecTools::getTextBetweenTags($wsData->field_publication_date, 'time');
                 $publicationDate = date('Y-m-d', strtotime($publicationDate));
@@ -439,6 +483,7 @@ class WS_Synchronization
                     'field_auteurs' => $authors,
                     'field_domaine' => $domains,
                     'field_faculte' => $faculties,
+                    'field_cible' => $cibles,
                     'field_type' => $pubTypes,
                     'field_ws_nid' => $ws_nid,
                     'changed' => time(),
